@@ -212,15 +212,18 @@ def menu_new():
 def menu_openFile():
 	global window
 	if reallyDiscardContent():
-		restart(askopenfilename(root=window))
+		restart(askopenfilename())
 
 def menu_saveFile():
 	global openfilename, nodes, connections
-	saveFile(openfilename, nodes, connections)
+	if openfilename == None:
+		menu_saveFileAs()
+	else:
+		saveFile(openfilename, nodes, connections)
 
 def menu_saveFileAs():
 	global nodes, connections, window
-	saveFile(askopenfilename(root=window), nodes, connections)
+	saveFile(asksaveasfilename(), nodes, connections)
 
 def menu_close():
 	if reallyDiscardContent():
