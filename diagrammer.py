@@ -1,8 +1,10 @@
 #!/usr/bin/python3
 
 usage="Usage:\tdiagrammer <file>"
+
 import sys
 import tkinter
+from tkinter.filedialog import *
 
 PADDING = 6
 
@@ -11,6 +13,7 @@ def die(msg):
 	sys.exit()
 
 def loadFile(filename):
+	global nodes, connections
 	nodes = list()
 	connections = list()
 
@@ -54,7 +57,6 @@ def loadFile(filename):
 			connections.append({"name": tokens[1], "desc": tokens[2]})
 		else:
 			die("Could not parse line: " + line)
-	return nodes, connections
 
 def saveFile(filename, nodes, connections):
 	print("TODO")
@@ -113,12 +115,13 @@ def onRelease(event):
 	dragging = False
 
 def onDrag(event):
-	global dragging, mouseXLeft, mouseYLeft, draggedObject
+	global dragging, mouseXLeft, mouseYLeft, draggedObject, saved
 	d = event.__dict__
 	if draggedObject != None:
 		draggedObject['x'] -= mouseXLeft - d['x_root']
 		draggedObject['y'] -= mouseYLeft - d['y_root']
 		render()
+		saved = False
 	mouseXLeft = d['x_root']
 	mouseYLeft = d['y_root']
 	dragging = True
@@ -153,17 +156,76 @@ def updateMouse(event):
 	cursorX = event.x - 400 + focus[0]
 	cursorY = event.y - 300 + focus[1]
 
-def main(filename):
-	global nodes, connections, canvas, chosenObject, focus, dragging, cursorX, cursorY
+def saveOldContent():
+	global saved
+	if not saved:
+		print("trying to save old content")
+		newwindow = tkinter.Tk()
+		label = tkinter.Label(newwindow, text="wow")
+		label.pack()
+		newwindow.pack()
+		newwindow.mainloop()
+
+def restart(filename=None):
+	global openfilename, dragging, chosenObject, nodes, connections, focus, saved
+	openfilename = filename
 	dragging = False
 	chosenObject = None
-	nodes, connections = loadFile(filename)
+	focus = (0, 0) # what coordinates are centered
+	if openfilename != None:
+		loadFile(openfilename)
+	else:
+		nodes = list()
+		connections = list()
+	saved = True
+
+def menu_newFile():
+	saveOldContent()
+	restart()
+
+def menu_openFile():
+	global window
+	saveOldContent()
+	restart(askopenfilename(root=window))
+
+def menu_saveFile():
+	global openfilename, nodes, connections
+	saveFile(openfilename, nodes, connections)
+
+def menu_saveFileAs():
+	global nodes, connections, window
+	saveFile(askopenfilename(root=window), nodes, connections)
+
+def menu_close():
+	saveOldContent()
+	sys.exit()
+
+def main():
+	global canvas, cursorX, cursorY, window
+
+	if len(sys.argv) == 1:
+		restart()
+	elif len(sys.argv) == 2:
+		restart(sys.argv[1])
+	else:
+		die(usage)
+
 	cursorX = 0
 	cursorY = 0
 
-	focus = (0, 0) # what coordinates are centered
-
 	window = tkinter.Tk()
+
+	# menu
+	menu = tkinter.Menu(window)
+	window.config(menu=menu)
+	filemenu = tkinter.Menu(menu)
+	menu.add_cascade(label="File", menu=filemenu)
+	filemenu.add_command(label="New File", command=menu_newFile)
+	filemenu.add_command(label="Open File", command=menu_openFile)
+	filemenu.add_command(label="Save File", command=menu_saveFile)
+	filemenu.add_command(label="Save File As", command=menu_saveFileAs)
+	filemenu.add_command(label="Close", command=menu_close)
+
 	window.minsize(800, 600)
 	window.maxsize(800, 600)
 	window.bind("<Button-1>", onClick) # fully show node / edit mode
@@ -180,7 +242,4 @@ def main(filename):
 	window.mainloop()
 
 if __name__ == "__main__":
-	if len(sys.argv) == 2:
-		main(sys.argv[1])
-	else:
-		die(usage)
+	main()
