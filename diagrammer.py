@@ -83,31 +83,46 @@ def render():
 			die("chosen?")
 			# TODO render description
 
-def onClick(event):
-	global mouseX, mouseY
-	d = event.__dict__
-	mouseX = d['x_root']
-	mouseY = d['y_root']
+def onClick(event): pass
+
+def onRelease(event):
+	global dragging
+	if dragging == False:
+		print("select node/connection")
+	dragging = False
 
 def onRightClick(event):
-	print(event)
+	global mouseXRight, mouseYRight
+	d = event.__dict__
+	mouseXRight = d['x_root']
+	mouseYRight = d['y_root']
+
+def onRightRelease(event):
+	global dragging
+	if dragging == False:
+		print("create node/connection? ")
+	dragging = False
 
 def onDrag(event):
-	global focus, mouseX, mouseY
-	d = event.__dict__
-	focus = (focus[0] + mouseX - d['x_root'], focus[1] + mouseY - d['y_root'])
-	render()
-	mouseX = d['x_root']
-	mouseY = d['y_root']
+	global dragging
+	dragging = True
+	print("move chosen node/connection")
 
 def onRightDrag(event):
-	print(event)
+	global focus, mouseXRight, mouseYRight, dragging
+	d = event.__dict__
+	focus = (focus[0] + mouseXRight - d['x_root'], focus[1] + mouseYRight - d['y_root'])
+	render()
+	mouseXRight = d['x_root']
+	mouseYRight = d['y_root']
+	dragging = True
 
 def onKeyPress(event):
-	print(event)
+	print("key event")
 
 def main(filename):
-	global nodes, connections, canvas, chosenObject, focus
+	global nodes, connections, canvas, chosenObject, focus, dragging
+	dragging = False
 	chosenObject = None
 	nodes, connections = loadFile(filename)
 
@@ -118,6 +133,8 @@ def main(filename):
 	window.maxsize(800, 600)
 	window.bind("<Button-1>", onClick) # fully show node / edit mode
 	window.bind("<Button-3>", onRightClick) # create node / connection
+	window.bind("<ButtonRelease-1>", onRelease)
+	window.bind("<ButtonRelease-3>", onRightRelease)
 	window.bind("<B1-Motion>", onDrag) # move node
 	window.bind("<B3-Motion>", onRightDrag) # move screen
 	window.bind("<Key>", onKeyPress) # enter text
