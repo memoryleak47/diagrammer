@@ -59,7 +59,12 @@ def loadFile(filename):
 			die("Could not parse line: " + line)
 
 def saveFile(filename, nodes, connections):
-	print("TODO")
+	f = open(filename, "w")
+	for node in nodes:
+		f.write("node '" + node["name"] + "' '" + str(node['x']) + "' '" + str(node['y']) + "' '" + node['desc'] + "'\n")
+	for connection in connections:
+		f.writeline("connection '" + connection["name"] + "' '" + node['desc'] + "'")
+	f.close()
 
 def getObjectAtMouse():
 	global canvas, focus, cursorX, cursorY
