@@ -83,6 +83,8 @@ def getTextWidth(text):
 	return 7 * m
 
 def getTextHeight(text):
+	if text == "":
+		return 0
 	return 14 * (1+text.count("\\n"))
 
 def render():
