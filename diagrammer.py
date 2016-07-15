@@ -84,13 +84,21 @@ def render():
 			# TODO render description
 
 def onClick(event):
-	print(event)
+	global mouseX, mouseY
+	d = event.__dict__
+	mouseX = d['x_root']
+	mouseY = d['y_root']
 
 def onRightClick(event):
 	print(event)
 
 def onDrag(event):
-	print(event)
+	global focus, mouseX, mouseY
+	d = event.__dict__
+	focus = (focus[0] + mouseX - d['x_root'], focus[1] + mouseY - d['y_root'])
+	render()
+	mouseX = d['x_root']
+	mouseY = d['y_root']
 
 def onRightDrag(event):
 	print(event)
