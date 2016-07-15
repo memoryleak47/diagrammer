@@ -121,7 +121,7 @@ def onDrag(event):
 		draggedObject['x'] -= mouseXLeft - d['x_root']
 		draggedObject['y'] -= mouseYLeft - d['y_root']
 		render()
-		saved = False
+		setSaved(False)
 	mouseXLeft = d['x_root']
 	mouseYLeft = d['y_root']
 	dragging = True
@@ -156,15 +156,40 @@ def updateMouse(event):
 	cursorX = event.x - 400 + focus[0]
 	cursorY = event.y - 300 + focus[1]
 
-def saveOldContent():
-	global saved
+def checkDecision():
+	global decision, decisionwindow
+	if decision != None:
+		decisionwindow.quit()
+		decisionwindow.destroy()
+		decisionwindow = None
+	else:
+		decisionwindow.after(20, checkDecision)
+
+def decideNo():
+	global decision
+	decision = False
+
+def decideYes():
+	global decision
+	decision = True
+
+def reallyDiscardContent():
+	global saved, decisionwindow, decision
+	decision = None
 	if not saved:
-		print("trying to save old content")
-		newwindow = tkinter.Tk()
-		label = tkinter.Label(newwindow, text="wow")
+		decisionwindow = tkinter.Tk()
+		label = tkinter.Label(decisionwindow, text="Pressing 'Yes' will discard your current changes")
+		buttonYes = tkinter.Button(decisionwindow, text="Yes", command=decideYes)
+		buttonNo = tkinter.Button(decisionwindow, text="Cancel", command=decideNo)
 		label.pack()
-		newwindow.pack()
-		newwindow.mainloop()
+		buttonYes.pack()
+		buttonNo.pack()
+		checkDecision()
+		decisionwindow.mainloop()
+		tmp = decision
+		decision = None
+		return tmp
+	return True
 
 def restart(filename=None):
 	global openfilename, dragging, chosenObject, nodes, connections, focus, saved
@@ -177,16 +202,17 @@ def restart(filename=None):
 	else:
 		nodes = list()
 		connections = list()
-	saved = True
+	setSaved(True)
+	render()
 
-def menu_newFile():
-	saveOldContent()
-	restart()
+def menu_new():
+	if reallyDiscardContent():
+		restart()
 
 def menu_openFile():
 	global window
-	saveOldContent()
-	restart(askopenfilename(root=window))
+	if reallyDiscardContent():
+		restart(askopenfilename(root=window))
 
 def menu_saveFile():
 	global openfilename, nodes, connections
@@ -197,18 +223,24 @@ def menu_saveFileAs():
 	saveFile(askopenfilename(root=window), nodes, connections)
 
 def menu_close():
-	saveOldContent()
-	sys.exit()
+	if reallyDiscardContent():
+		sys.exit()
+
+def setSaved(b):
+	global saved, window, openfilename
+	saved = b
+	title = "diagrammer - "
+	if openfilename == None:
+		title += "<Unsaved Document>"
+	else:
+		title += openfilename
+
+	if not saved:
+		title += " *"
+	window.wm_title(title)
 
 def main():
 	global canvas, cursorX, cursorY, window
-
-	if len(sys.argv) == 1:
-		restart()
-	elif len(sys.argv) == 2:
-		restart(sys.argv[1])
-	else:
-		die(usage)
 
 	cursorX = 0
 	cursorY = 0
@@ -220,7 +252,7 @@ def main():
 	window.config(menu=menu)
 	filemenu = tkinter.Menu(menu)
 	menu.add_cascade(label="File", menu=filemenu)
-	filemenu.add_command(label="New File", command=menu_newFile)
+	filemenu.add_command(label="New", command=menu_new)
 	filemenu.add_command(label="Open File", command=menu_openFile)
 	filemenu.add_command(label="Save File", command=menu_saveFile)
 	filemenu.add_command(label="Save File As", command=menu_saveFileAs)
@@ -238,7 +270,14 @@ def main():
 	window.bind("<Motion>", updateMouse)
 	canvas = tkinter.Canvas(window, width=800, height=600)
 	canvas.pack()
-	render()
+
+	if len(sys.argv) == 1:
+		restart()
+	elif len(sys.argv) == 2:
+		restart(sys.argv[1])
+	else:
+		die(usage)
+
 	window.mainloop()
 
 if __name__ == "__main__":
