@@ -47,7 +47,7 @@ def loadFile(filename):
 				i += 1
 
 		if tokens[0] == "node":
-			nodes.append({"name": tokens[1], "desc": tokens[2]})
+			nodes.append({"name": tokens[1], "x": int(tokens[2]), "y": int(tokens[3]), "desc": tokens[4]})
 		elif line.startswith("connection"):
 			connections.append({"name": tokens[1], "desc": tokens[2]})
 		else:
@@ -57,22 +57,65 @@ def loadFile(filename):
 def saveFile(filename, nodes, connections):
 	print("TODO")
 
+def getTextWidth(text):
+	return 12 * len(text)
+
+def getTextHeight(text):
+	return 12
+
+def render():
+	global canvas, focus, nodes, connections, chosenObject
+	canvas.delete("all")
+	canvas.create_rectangle(0, 0, 800, 600, fill="white")
+	for connection in connections:
+		if connection == chosenObject:
+			die("chosen? D:")
+		else:
+			canvas.create_line()
+	for node in nodes:
+		renderPosX = 400 + node["x"] - focus[0]
+		renderPosY = 300 + node["y"] - focus[1]
+		sizeX = getTextWidth(node["name"])
+		sizeY = getTextHeight(node["name"])
+		canvas.create_rectangle(renderPosX - sizeX/2, renderPosY - sizeY/2, renderPosX + sizeX/2, renderPosY + sizeY/2, fill="grey")
+		canvas.create_text((renderPosX, renderPosY), anchor="nw", text=node["name"])
+		if node == chosenObject:
+			die("chosen?")
+			# TODO render description
+
 def onClick(event):
+	print(event)
+
+def onRightClick(event):
+	print(event)
+
+def onDrag(event):
+	print(event)
+
+def onRightDrag(event):
 	print(event)
 
 def onKeyPress(event):
 	print(event)
 
 def main(filename):
+	global nodes, connections, canvas, chosenObject, focus
+	chosenObject = None
 	nodes, connections = loadFile(filename)
+
+	focus = (0, 0)
 
 	window = tkinter.Tk()
 	window.minsize(800, 600)
 	window.maxsize(800, 600)
-	window.bind("<Button-1>", onClick)
-	window.bind("<Key>", onKeyPress)
+	window.bind("<Button-1>", onClick) # fully show node / edit mode
+	window.bind("<Button-3>", onRightClick) # create node / connection
+	window.bind("<B1-Motion>", onDrag) # move node
+	window.bind("<B3-Motion>", onRightDrag) # move screen
+	window.bind("<Key>", onKeyPress) # enter text
 	canvas = tkinter.Canvas(window, width=800, height=600)
 	canvas.pack()
+	render()
 	window.mainloop()
 
 if __name__ == "__main__":
