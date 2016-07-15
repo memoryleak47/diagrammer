@@ -52,9 +52,9 @@ def loadFile(filename):
 				i += 1
 
 		if tokens[0] == "node":
-			nodes.append({"name": tokens[1], "x": int(tokens[2]), "y": int(tokens[3]), "desc": tokens[4]})
+			nodes.append({'type': 'node', "name": tokens[1], "x": int(tokens[2]), "y": int(tokens[3]), "desc": tokens[4]})
 		elif line.startswith("connection"):
-			connections.append({"name": tokens[1], "desc": tokens[2]})
+			connections.append({'type': 'connection', "name": tokens[1], "desc": tokens[2]})
 		else:
 			die("Could not parse line: " + line)
 
@@ -105,8 +105,17 @@ def render():
 			die("chosen?")
 			# TODO render description
 
+def destroyPopup():
+	global popupmenu
+	if popupmenu != None:
+		popupmenu.destroy()
+		popupmenu = None
+
+# events
+
 def onClick(event):
 	global mouseXLeft, mouseYLeft, draggedObject
+	destroyPopup()
 	d = event.__dict__
 	mouseXLeft = d['x_root']
 	mouseYLeft = d['y_root']
@@ -138,10 +147,44 @@ def onRightClick(event):
 	mouseXRight = d['x_root']
 	mouseYRight = d['y_root']
 
+def createNode(x, y):
+	global nodes
+	nodes.append({'type': 'node', 'name': '', 'x': x, 'y': y, 'desc': ''})
+	setSaved(False)
+	render()
+
+def deleteNode(node):
+	global nodes
+	nodes.remove(node)
+	setSaved(False)
+	render()
+
+# def createConnection(): TODO
+
+def deleteConnection(connection):
+	global connections
+	connections.remove(connection)
+	setSaved(False)
+	render()
+
 def onRightRelease(event):
-	global dragging
+	global dragging, window, cursorX, cursorY, popupmenu
+	destroyPopup()
 	if dragging == False:
-		print("create node/connection? ")
+		obj = getObjectAtMouse()
+		if obj == None:
+			popupmenu = tkinter.Menu(window, tearoff=0)
+			popupmenu.add_command(label="Create Node", command=lambda: createNode(cursorX, cursorY))
+		elif obj["type"] == "node":
+			popupmenu = tkinter.Menu(window, tearoff=0)
+			popupmenu.add_command(label="Delete Node", command=lambda: deleteNode(obj))
+			#menu.add_command(label="Connect To", command=lambda: createConnection(obj))
+		elif obj["type"] == "connection":
+			popupmenu = tkinter.Menu(window, tearoff=0)
+			popupmenu.add_command(label="Delete Connection", command=lambda: deleteConnection(obj))
+		else:
+			die("wot?")
+		popupmenu.post(event.x_root, event.y_root)
 	dragging = False
 
 def onRightDrag(event):
@@ -160,6 +203,8 @@ def updateMouse(event):
 	global cursorX, cursorY, focus
 	cursorX = event.x - 400 + focus[0]
 	cursorY = event.y - 300 + focus[1]
+
+# decision
 
 def checkDecision():
 	global decision, decisionwindow
@@ -248,8 +293,9 @@ def setSaved(b):
 	window.wm_title(title)
 
 def main():
-	global canvas, cursorX, cursorY, window
+	global canvas, cursorX, cursorY, window, popupmenu
 
+	popupmenu = None
 	cursorX = 0
 	cursorY = 0
 
