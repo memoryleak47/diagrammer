@@ -57,6 +57,16 @@ def loadFile(filename):
 def saveFile(filename, nodes, connections):
 	print("TODO")
 
+def getObjectAtMouse():
+	global canvas, focus, cursorX, cursorY
+	for node in nodes:
+		sizeX = getTextWidth(node['name'])
+		sizeY = getTextHeight(node['name'])
+		if node["x"] - sizeX/2 < cursorX and node["x"] + sizeX/2 > cursorX and node["y"] - sizeY/2 < cursorY and node["y"] + sizeY/2 > cursorY:
+			return node
+	# for connection in connections:
+	return None
+
 def getTextWidth(text):
 	m = 0
 	for line in text.split("\\n"):
@@ -86,13 +96,31 @@ def render():
 			die("chosen?")
 			# TODO render description
 
-def onClick(event): pass
+def onClick(event):
+	global mouseXLeft, mouseYLeft, draggedObject
+	d = event.__dict__
+	mouseXLeft = d['x_root']
+	mouseYLeft = d['y_root']
+	draggedObject = getObjectAtMouse()
 
 def onRelease(event):
-	global dragging
+	global dragging, chosenObject, draggedObject
 	if dragging == False:
-		print("select node/connection")
+		chosenObject = getObjectAtMouse()
+		draggedObject = None
 	dragging = False
+
+def onDrag(event):
+	global dragging, mouseXLeft, mouseYLeft, draggedObject
+	d = event.__dict__
+	if draggedObject != None:
+		draggedObject['x'] -= mouseXLeft - d['x_root']
+		draggedObject['y'] -= mouseYLeft - d['y_root']
+		render()
+	mouseXLeft = d['x_root']
+	mouseYLeft = d['y_root']
+	dragging = True
+
 
 def onRightClick(event):
 	global mouseXRight, mouseYRight
@@ -106,11 +134,6 @@ def onRightRelease(event):
 		print("create node/connection? ")
 	dragging = False
 
-def onDrag(event):
-	global dragging
-	dragging = True
-	print("move chosen node/connection")
-
 def onRightDrag(event):
 	global focus, mouseXRight, mouseYRight, dragging
 	d = event.__dict__
@@ -123,13 +146,20 @@ def onRightDrag(event):
 def onKeyPress(event):
 	print("key event")
 
+def updateMouse(event):
+	global cursorX, cursorY, focus
+	cursorX = event.x - 400 + focus[0]
+	cursorY = event.y - 300 + focus[1]
+
 def main(filename):
-	global nodes, connections, canvas, chosenObject, focus, dragging
+	global nodes, connections, canvas, chosenObject, focus, dragging, cursorX, cursorY
 	dragging = False
 	chosenObject = None
 	nodes, connections = loadFile(filename)
+	cursorX = 0
+	cursorY = 0
 
-	focus = (0, 0)
+	focus = (0, 0) # what coordinates are centered
 
 	window = tkinter.Tk()
 	window.minsize(800, 600)
@@ -141,6 +171,7 @@ def main(filename):
 	window.bind("<B1-Motion>", onDrag) # move node
 	window.bind("<B3-Motion>", onRightDrag) # move screen
 	window.bind("<Key>", onKeyPress) # enter text
+	window.bind("<Motion>", updateMouse)
 	canvas = tkinter.Canvas(window, width=800, height=600)
 	canvas.pack()
 	render()
