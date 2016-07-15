@@ -4,6 +4,8 @@ usage="Usage:\tdiagrammer <file>"
 import sys
 import tkinter
 
+PADDING = 6
+
 def die(msg):
 	print(msg)
 	sys.exit()
@@ -62,7 +64,7 @@ def getObjectAtMouse():
 	for node in nodes:
 		sizeX = getTextWidth(node['name'])
 		sizeY = getTextHeight(node['name'])
-		if node["x"] - sizeX/2 < cursorX and node["x"] + sizeX/2 > cursorX and node["y"] - sizeY/2 < cursorY and node["y"] + sizeY/2 > cursorY:
+		if node["x"] - sizeX/2 - PADDING < cursorX and node["x"] + sizeX/2 + PADDING > cursorX and node["y"] - sizeY/2 - PADDING < cursorY and node["y"] + sizeY/2 + PADDING > cursorY:
 			return node
 	# for connection in connections:
 	return None
@@ -90,7 +92,7 @@ def render():
 		renderPosY = 300 + node["y"] - focus[1]
 		sizeX = getTextWidth(node["name"])
 		sizeY = getTextHeight(node["name"])
-		canvas.create_rectangle(renderPosX - sizeX/2, renderPosY - sizeY/2, renderPosX + sizeX/2, renderPosY + sizeY/2, fill="grey")
+		canvas.create_rectangle(renderPosX - sizeX/2 - PADDING, renderPosY - sizeY/2 - PADDING, renderPosX + sizeX/2 + PADDING, renderPosY + sizeY/2 + PADDING, fill="grey")
 		canvas.create_text((renderPosX - sizeX/2, renderPosY - sizeY/2), anchor="nw", text=node["name"])
 		if node == chosenObject:
 			die("chosen?")
