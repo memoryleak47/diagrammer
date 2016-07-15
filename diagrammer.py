@@ -58,10 +58,13 @@ def saveFile(filename, nodes, connections):
 	print("TODO")
 
 def getTextWidth(text):
-	return 12 * len(text)
+	m = 0
+	for line in text.split("\\n"):
+		m = max(m, len(line))
+	return 7 * m
 
 def getTextHeight(text):
-	return 12
+	return 14 * (1+text.count("\\n"))
 
 def render():
 	global canvas, focus, nodes, connections, chosenObject
@@ -78,7 +81,7 @@ def render():
 		sizeX = getTextWidth(node["name"])
 		sizeY = getTextHeight(node["name"])
 		canvas.create_rectangle(renderPosX - sizeX/2, renderPosY - sizeY/2, renderPosX + sizeX/2, renderPosY + sizeY/2, fill="grey")
-		canvas.create_text((renderPosX, renderPosY), anchor="nw", text=node["name"])
+		canvas.create_text((renderPosX - sizeX/2, renderPosY - sizeY/2), anchor="nw", text=node["name"])
 		if node == chosenObject:
 			die("chosen?")
 			# TODO render description
