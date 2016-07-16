@@ -92,7 +92,8 @@ def getHeadSize(text):
 	x = 7 * m
 	if text == "":
 		y = 0
-	y = 14 * (1+text.count("\\n"))
+	else:
+		y = 14 * (1+text.count("\\n"))
 	return x, y
 
 def getBodySize(text):
@@ -102,7 +103,8 @@ def getBodySize(text):
 	x = 7 * m
 	if text == "":
 		y = 0
-	y = 14 * (1+text.count("\\n"))
+	else:
+		y = 14 * (1+text.count("\\n"))
 	return x, y
 
 def render():
