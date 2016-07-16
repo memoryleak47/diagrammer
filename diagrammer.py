@@ -7,6 +7,9 @@ import tkinter
 from tkinter.filedialog import *
 
 PADDING = 6
+HEADCOLOR = "red"
+BODYCOLOR = "grey"
+EDITCOLOR = "blue"
 
 def die(msg):
 	print(msg)
@@ -108,7 +111,7 @@ def getBodySize(text):
 	return x, y
 
 def render():
-	global canvas, focus, nodes, connections
+	global canvas, focus, nodes, connections, editdata
 	canvas.delete("all")
 	canvas.create_rectangle(0, 0, 800, 600, fill="white")
 	for connection in connections:
@@ -117,14 +120,26 @@ def render():
 		renderPosX = 400 + node["x"] - focus[0]
 		renderPosY = 300 + node["y"] - focus[1]
 		sizeX, sizeY = getHeadSize(node["head"])
-		canvas.create_rectangle(renderPosX - sizeX/2 - PADDING, renderPosY - sizeY/2 - PADDING, renderPosX + sizeX/2 + PADDING, renderPosY + sizeY/2 + PADDING, fill="grey")
-		canvas.create_text((renderPosX - sizeX/2, renderPosY - sizeY/2), anchor="nw", text=node["head"])
+		canvas.create_rectangle(renderPosX - sizeX/2 - PADDING, renderPosY - sizeY/2 - PADDING, renderPosX + sizeX/2 + PADDING, renderPosY + sizeY/2 + PADDING, fill=HEADCOLOR)
+
+		# if node is edited
+		if editdata['object'] == node and editdata['type'] == 'node':
+			# render edit environment
+			canvas.create_rectangle(renderPosX - sizeX/2 - PADDING/2, renderPosY - sizeY/2 - PADDING/2, renderPosX + sizeX/2 + PADDING/2, renderPosY + sizeY/2 + PADDING/2, fill=EDITCOLOR)
+			canvas.create_text((renderPosX - sizeX/2, renderPosY - sizeY/2), anchor="nw", text=editdata['text'])
+		else:
+			canvas.create_text((renderPosX - sizeX/2, renderPosY - sizeY/2), anchor="nw", text=node["head"])
 		if node['status'] == 'open':
 			bodyRenderPosX = 400 + getBodyPosition(node)[0] - focus[0]
 			bodyRenderPosY = 300 + getBodyPosition(node)[1] - focus[1]
 			bodySizeX, bodySizeY = getBodySize(node["body"])
-			canvas.create_rectangle(bodyRenderPosX - bodySizeX/2 - PADDING, bodyRenderPosY - bodySizeY/2 - PADDING, bodyRenderPosX + bodySizeX/2 + PADDING, bodyRenderPosY + bodySizeY/2 + PADDING, fill="red")
-			canvas.create_text((bodyRenderPosX - bodySizeX/2, bodyRenderPosY - bodySizeY/2), anchor="nw", text=node["body"])
+			canvas.create_rectangle(bodyRenderPosX - bodySizeX/2 - PADDING, bodyRenderPosY - bodySizeY/2 - PADDING, bodyRenderPosX + bodySizeX/2 + PADDING, bodyRenderPosY + bodySizeY/2 + PADDING, fill=BODYCOLOR)
+			# if body is edited
+			if editdata['object'] == node and editdata['type'] == 'nodebody':
+				canvas.create_rectangle(bodyRenderPosX - bodySizeX/2 - PADDING/2, bodyRenderPosY - bodySizeY/2 - PADDING/2, bodyRenderPosX + bodySizeX/2 + PADDING/2, bodyRenderPosY + bodySizeY/2 + PADDING/2, fill=EDITCOLOR)
+				canvas.create_text((bodyRenderPosX - bodySizeX/2, bodyRenderPosY - bodySizeY/2), anchor="nw", text=editdata["text"])
+			else:
+				canvas.create_text((bodyRenderPosX - bodySizeX/2, bodyRenderPosY - bodySizeY/2), anchor="nw", text=node["body"])
 
 def destroyPopup():
 	global popupmenu
@@ -187,12 +202,18 @@ def deleteNode(node):
 	render()
 
 def editNode(node):
-	global nodes
-	die("TODO: editNode")
+	global nodes, editdata
+	editdata['object'] = node
+	editdata['type'] = 'node'
+	editdata['text'] = node['head']
+	render()
 
 def editNodeBody(node):
-	global nodes
-	die("TODO: editNodeBody")
+	global nodes, editdata
+	editdata['object'] = node
+	editdata['type'] = 'nodebody'
+	editdata['text'] = node['body']
+	render()
 
 # def createConnection(): TODO
 
@@ -233,7 +254,8 @@ def onRightDrag(event):
 	dragging = True
 
 def onKeyPress(event):
-	print("key event")
+	global editdata
+	editdata['object'] = None
 
 def updateMouse(event):
 	global cursorX, cursorY, focus
@@ -279,7 +301,8 @@ def reallyDiscardContent():
 	return True
 
 def restart(filename=None):
-	global openfilename, dragging, nodes, connections, focus, saved
+	global openfilename, dragging, nodes, connections, focus, saved, editdata
+	editdata = {'type': None, 'object': None, 'text': None}
 	openfilename = filename
 	dragging = False
 	focus = (0, 0) # what coordinates are centered
