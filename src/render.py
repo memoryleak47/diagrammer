@@ -18,14 +18,13 @@ def getTextSize(text):
 	global codefont, stdfont
 
 	x = 0
-	code = False
 	for line in text.split("\n"):
 		line.find("`")
-		x = max(x, font.measure(line))
+		x = max(x, stdfont.measure(line))
 	if text == "":
 		y = 0
 	else:
-		y = font.metrics()['linespace'] * (1+text.count("\n"))
+		y = stdfont.metrics()['linespace'] * (1+text.count("\n"))
 	return x, y
 
 def getHeadSize(node):
@@ -42,7 +41,7 @@ def getBodyPosition(node):
 	return node['x'], node['y'] + getHeadSize(node)[1]/2 + getBodySize(node)[1]/2 + 2 * PADDING
 
 def getBodySize(node):
-	global editdata, font
+	global editdata, codefont, stdfont
 	if editdata['object'] == node and editdata['type'] == 'nodebody':
 		text = editdata['text']
 	else:
@@ -61,11 +60,11 @@ def renderText(x, y, text):
 	renderLines(x, y, [line for line in text.split("\n")])
 
 def renderLines(x, y, lines):
-	global canvas, font
+	global canvas, codefont, stdfont
 
 	for line in lines:
-		canvas.create_text((x, y), anchor="nw", text=line, font=font)
-		y += font.metrics()['linespace']
+		canvas.create_text((x, y), anchor="nw", text=line, font=stdfont)
+		y += stdfont.metrics()['linespace']
 
 def renderNodeHead(node, editing=False):
 	global focus, canvas, editdata
