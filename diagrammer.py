@@ -52,9 +52,9 @@ def loadFile(filename):
 				i += 1
 
 		if tokens[0] == "node":
-			nodes.append({'type': 'node', "head": tokens[1], "x": int(tokens[2]), "y": int(tokens[3]), "body": tokens[4]})
+			nodes.append({'status': 'closed', 'type': 'node', "head": tokens[1], "x": int(tokens[2]), "y": int(tokens[3]), "body": tokens[4]})
 		elif line.startswith("connection"):
-			connections.append({'type': 'connection', "from": tokens[1], "to": tokens[2], "body": tokens[3]})
+			connections.append({'status': 'closed', 'type': 'connection', "from": tokens[1], "to": tokens[2], "body": tokens[3]})
 		else:
 			die("Could not parse line: " + line)
 
@@ -66,12 +66,22 @@ def saveFile(filename, nodes, connections):
 		f.writeline("connection '" + connection["from"] + "' '" + node['to'] + "' '" + node['body'] + "'")
 	f.close()
 
+def getBodyPosition(node):
+	if node['status'] != 'open':
+		die('getBodyPosition(): node is not open')
+	return node['x'], node['y'] + getHeadSize(node['head'])[1] + 2 * PADDING
+
 def getObjectAtMouse():
 	global canvas, focus, cursorX, cursorY
 	for node in nodes:
 		sizeX, sizeY = getHeadSize(node['head'])
 		if node["x"] - sizeX/2 - PADDING < cursorX and node["x"] + sizeX/2 + PADDING > cursorX and node["y"] - sizeY/2 - PADDING < cursorY and node["y"] + sizeY/2 + PADDING > cursorY:
 			return node
+		elif node['status'] == 'open':
+			bodyPosX, bodyPosY = getBodyPosition(node)
+			bodySizeX, bodySizeY = getBodySize(node['body'])
+			if bodyPosX - bodySizeX/2 - PADDING < cursorX and bodyPosX + bodySizeX/2 + PADDING > cursorX and bodyPosY - bodySizeY/2 - PADDING < cursorY and bodyPosY + bodySizeY/2 + PADDING > cursorY:
+				return {'type': 'nodebody', 'node': node}
 	# for connection in connections:
 	return None
 
@@ -85,24 +95,34 @@ def getHeadSize(text):
 	y = 14 * (1+text.count("\\n"))
 	return x, y
 
+def getBodySize(text):
+	m = 0
+	for line in text.split("\\n"):
+		m = max(m, len(line))
+	x = 7 * m
+	if text == "":
+		y = 0
+	y = 14 * (1+text.count("\\n"))
+	return x, y
+
 def render():
-	global canvas, focus, nodes, connections, chosenObject
+	global canvas, focus, nodes, connections
 	canvas.delete("all")
 	canvas.create_rectangle(0, 0, 800, 600, fill="white")
 	for connection in connections:
-		if connection == chosenObject:
-			die("chosen? D:")
-		else:
-			canvas.create_line()
+		canvas.create_line()
 	for node in nodes:
 		renderPosX = 400 + node["x"] - focus[0]
 		renderPosY = 300 + node["y"] - focus[1]
 		sizeX, sizeY = getHeadSize(node["head"])
 		canvas.create_rectangle(renderPosX - sizeX/2 - PADDING, renderPosY - sizeY/2 - PADDING, renderPosX + sizeX/2 + PADDING, renderPosY + sizeY/2 + PADDING, fill="grey")
 		canvas.create_text((renderPosX - sizeX/2, renderPosY - sizeY/2), anchor="nw", text=node["head"])
-		if node == chosenObject:
-			die("chosen?")
-			# TODO render description
+		if node['status'] == 'open':
+			bodyRenderPosX = 400 + getBodyPosition(node)[0] - focus[0]
+			bodyRenderPosY = 300 + getBodyPosition(node)[1] - focus[1]
+			bodySizeX, bodySizeY = getBodySize(node["body"])
+			canvas.create_rectangle(bodyRenderPosX - bodySizeX/2 - PADDING, bodyRenderPosY - bodySizeY/2 - PADDING, bodyRenderPosX + bodySizeX/2 + PADDING, bodyRenderPosY + bodySizeY/2 + PADDING, fill="red")
+			canvas.create_text((bodyRenderPosX - bodySizeX/2, bodyRenderPosY - bodySizeY/2), anchor="nw", text=node["body"])
 
 def destroyPopup():
 	global popupmenu
@@ -121,9 +141,15 @@ def onClick(event):
 	draggedObject = getObjectAtMouse()
 
 def onRelease(event):
-	global dragging, chosenObject, draggedObject
+	global dragging, draggedObject
 	if dragging == False:
-		chosenObject = getObjectAtMouse()
+		obj = getObjectAtMouse()
+		if obj != None and (obj['type'] == "node" or obj['type'] == "connection"):
+			if obj['status'] == 'closed':
+				obj['status'] = "open"
+			elif obj['status'] == 'open':
+				obj['status'] = "closed"
+			render()
 		draggedObject = None
 	dragging = False
 
@@ -148,7 +174,7 @@ def onRightClick(event):
 
 def createNode(x, y):
 	global nodes
-	nodes.append({'type': 'node', 'head': '', 'x': x, 'y': y, 'body': ''})
+	nodes.append({'status': 'closed', 'type': 'node', 'head': '', 'x': x, 'y': y, 'body': ''})
 	setSaved(False)
 	render()
 
@@ -157,6 +183,10 @@ def deleteNode(node):
 	nodes.remove(node)
 	setSaved(False)
 	render()
+
+def editNode(node):
+	global nodes
+	die("TODO")
 
 # def createConnection(): TODO
 
@@ -177,7 +207,8 @@ def onRightRelease(event):
 		elif obj["type"] == "node":
 			popupmenu = tkinter.Menu(window, tearoff=0)
 			popupmenu.add_command(label="Delete Node", command=lambda: deleteNode(obj))
-			#menu.add_command(label="Connect To", command=lambda: createConnection(obj))
+			#popupmenu.add_command(label="Connect To", command=lambda: createConnection(obj))
+			popupmenu.add_command(label="Edit", command=lambda: editNode(obj))
 		elif obj["type"] == "connection":
 			popupmenu = tkinter.Menu(window, tearoff=0)
 			popupmenu.add_command(label="Delete Connection", command=lambda: deleteConnection(obj))
@@ -241,10 +272,9 @@ def reallyDiscardContent():
 	return True
 
 def restart(filename=None):
-	global openfilename, dragging, chosenObject, nodes, connections, focus, saved
+	global openfilename, dragging, nodes, connections, focus, saved
 	openfilename = filename
 	dragging = False
-	chosenObject = None
 	focus = (0, 0) # what coordinates are centered
 	if openfilename != None:
 		loadFile(openfilename)
