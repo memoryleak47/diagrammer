@@ -3,7 +3,8 @@
 usage="Usage:\tdiagrammer <file>"
 
 import sys
-import tkinter, tkinter.font
+import tkinter
+import tkinter.font as tkfont
 import string
 from tkinter.filedialog import *
 
@@ -14,7 +15,6 @@ EDITCOLOR = "blue"
 
 FONT = "Monospace"
 FONTSIZE = 12
-LINEDIST = 14
 
 def die(msg):
 	print(msg)
@@ -135,7 +135,7 @@ def getTextSize(text):
 	if text == "":
 		y = 0
 	else:
-		y = LINEDIST * (1+text.count("\n"))
+		y = font.metrics()['linespace'] * (1+text.count("\n"))
 	return x, y
 
 def getHeadSize(node):
@@ -175,7 +175,7 @@ def renderLines(x, y, lines):
 
 	for line in lines:
 		canvas.create_text((x, y), anchor="nw", text=line, font=font)
-		y += LINEDIST
+		y += font.metrics()['linespace']
 
 def renderNodeHead(node, editing=False):
 	global focus, canvas, editdata
@@ -354,7 +354,8 @@ def onKeyPress(event):
 	if editdata['text'] != None:
 		if event.keysym == "Tab":
 			editdata['text'] += "\t"
-		if char in string.printable:
+			render()
+		elif char in string.printable:
 			editdata['text'] += char
 			render()
 		elif char == "\\r" and event.state == 20: # Ctrl + Enter
@@ -484,7 +485,7 @@ def main():
 	cursorY = 0
 
 	window = tkinter.Tk()
-	font = font.Font(family=FONT, size=FONTSIZE)
+	font = tkfont.Font(family=FONT, size=FONTSIZE)
 
 	# menu
 	menu = tkinter.Menu(window)
