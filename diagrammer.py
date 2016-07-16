@@ -84,6 +84,9 @@ def loadFile(filename):
 					elif line[i:i+2] == "\\n": # \n
 						tmp += "\n"
 						i += 2
+					elif line[i:i+2] == "\\t": # \t
+						tmp += "\t"
+						i += 2
 					elif line[i] == "'":
 						break
 					else:
@@ -104,7 +107,7 @@ def loadFile(filename):
 def saveFile(filename, nodes, connections):
 	f = open(filename, "w")
 	for node in nodes:
-		f.write("node '" + node["head"].replace("\n", "\\n") + "' '" + str(node['x']) + "' '" + str(node['y']) + "' '" + node['body'].replace("\n", "\\n") + "'\n")
+		f.write("node '" + node["head"].replace("\n", "\\n").replace("\t", "\\t") + "' '" + str(node['x']) + "' '" + str(node['y']) + "' '" + node['body'].replace("\n", "\\n").replace("\t", "\\t") + "'\n")
 	for connection in connections:
 		f.writeline("connection '" + connection["from"] + "' '" + node['to'] + "' '" + node['body'] + "'")
 	f.close()
@@ -348,33 +351,34 @@ def onKeyPress(event):
 	global editdata
 	char = repr(event.char)[1:-1] # 'wow' -> wow
 
-	if char in string.printable:
-		editdata['text'] += char
-		render()
-	elif char == "\\r" and event.state == 20: # Ctrl + Enter
-		obj = editdata['object']
-		if editdata['type'] == 'node':
-			obj['head'] = editdata['text']
-		elif editdata['type'] == 'nodebody':
-			obj['body'] = editdata['text']
-		elif editdata['type'] == 'connection':
-			die("TODO $12")
-		else:
-			die("onKeyPress(): Ctrl+Enter: editdata['type'] is unknown")
-		resetEditdata()
-		setSaved(False)
-		render()
-	elif char == "\\x1b":
-		resetEditdata()
-		render()
-	elif char == "\\x08":
-		editdata['text'] = editdata['text'][:-1]
-		render()
-	elif char == "\\r":
-		editdata['text'] += "\n"
-		render()
-	else:
-		print(char, event.state)
+	if editdata['text'] != None:
+		if event.keysym == "Tab":
+			editdata['text'] += "\t"
+		if char in string.printable:
+			editdata['text'] += char
+			render()
+		elif char == "\\r" and event.state == 20: # Ctrl + Enter
+			obj = editdata['object']
+			if editdata['type'] == 'node':
+				obj['head'] = editdata['text']
+			elif editdata['type'] == 'nodebody':
+				obj['body'] = editdata['text']
+			elif editdata['type'] == 'connection':
+				die("TODO $12")
+			else:
+				die("onKeyPress(): Ctrl+Enter: editdata['type'] is unknown")
+			resetEditdata()
+			setSaved(False)
+			render()
+		elif char == "\\x1b":
+			resetEditdata()
+			render()
+		elif char == "\\x08":
+			editdata['text'] = editdata['text'][:-1]
+			render()
+		elif char == "\\r":
+			editdata['text'] += "\n"
+			render()
 
 def updateMouse(event):
 	global cursorX, cursorY, focus
