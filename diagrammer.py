@@ -71,8 +71,17 @@ def loadFile(filename):
 				tmp = ""
 				i += 1
 				while i < len(line):
-					if line[i] == "\\":
-						tmp += line[i+1]
+					if line[i:i+2] == "\\'": # \'
+						tmp += "'"
+						i += 2
+					elif line[i:i+2] == "\\\\": # \\
+						tmp += "\\"
+						i += 2
+					elif line[i:i+2] == "\\`": # \`
+						tmp += "\\`"
+						i += 2
+					elif line[i:i+2] == "\\n": # \n
+						tmp += "\n"
 						i += 2
 					elif line[i] == "'":
 						break
@@ -125,13 +134,13 @@ def getHeadSize(node):
 	else:
 		text = node['head']
 	m = 0
-	for line in text.split("\\n"):
+	for line in text.split("\n"):
 		m = max(m, len(line))
 	x = 7 * m
 	if text == "":
 		y = 0
 	else:
-		y = 14 * (1+text.count("\\n"))
+		y = 14 * (1+text.count("\n"))
 	return x, y
 
 def getBodySize(node):
@@ -141,25 +150,25 @@ def getBodySize(node):
 	else:
 		text = node['body']
 	m = 0
-	for line in text.split("\\n"):
+	for line in text.split("\n"):
 		m = max(m, len(line))
 	x = 7 * m
 	if text == "":
 		y = 0
 	else:
-		y = 14 * (1+text.count("\\n"))
+		y = 14 * (1+text.count("\n"))
 	return x, y
 
 def renderConnection(connection):
 	die("TODO: renderConnection")
 
 def renderEditText(x, y, text, cursor):
-	renderLines(x, y, [line.replace("\\\\", "\\") for line in text.split("\\n")])
+	renderLines(x, y, [line for line in text.split("\n")])
 	# TODO render cursor
 
 def renderText(x, y, text):
 	# TODO source-`code`
-	renderLines(x, y, [line.replace("\\\\", "\\") for line in text.split("\\n")])
+	renderLines(x, y, [line for line in text.split("\n")])
 
 def renderLines(x, y, lines):
 	global canvas
