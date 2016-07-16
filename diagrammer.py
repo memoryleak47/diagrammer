@@ -109,11 +109,6 @@ def saveFile(filename, nodes, connections):
 		f.writeline("connection '" + connection["from"] + "' '" + node['to'] + "' '" + node['body'] + "'")
 	f.close()
 
-def getBodyPosition(node):
-	if node['status'] != 'open':
-		die('getBodyPosition(): node is not open')
-	return node['x'], node['y'] + getHeadSize(node)[1] + 2 * PADDING
-
 def getObjectAtMouse():
 	global canvas, focus, cursorX, cursorY
 	for node in nodes:
@@ -147,6 +142,11 @@ def getHeadSize(node):
 	else:
 		text = node['head']
 	return getTextSize(text)
+
+def getBodyPosition(node):
+	if node['status'] != 'open':
+		die('getBodyPosition(): node is not open')
+	return node['x'], node['y'] + getHeadSize(node)[1]/2 + getBodySize(node)[1]/2 + 2 * PADDING
 
 def getBodySize(node):
 	global editdata, font
