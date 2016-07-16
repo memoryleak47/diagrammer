@@ -9,9 +9,11 @@ import string
 from tkinter.filedialog import *
 
 PADDING = 6
+
+BACKGROUNDCOLOR = "#AAAAAA"
 HEADCOLOR = "red"
-BODYCOLOR = "grey"
-EDITCOLOR = "blue"
+BODYCOLOR = "#AA5555"
+EDITCOLOR = "white"
 
 STDFONT = ("times", 12)
 CODEFONT = ("Monospace", 12)
