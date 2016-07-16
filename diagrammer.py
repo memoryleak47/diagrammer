@@ -3,7 +3,7 @@
 usage="Usage:\tdiagrammer <file>"
 
 import sys
-import tkinter
+import tkinter, tkinter.font
 import string
 from tkinter.filedialog import *
 
@@ -12,8 +12,9 @@ HEADCOLOR = "red"
 BODYCOLOR = "grey"
 EDITCOLOR = "blue"
 
-FONTWIDTH = 12
-FONTHEIGHT = 12
+FONT = "Monospace"
+FONTSIZE = 12
+LINEDIST = 14
 
 def die(msg):
 	print(msg)
@@ -127,37 +128,33 @@ def getObjectAtMouse():
 	# for connection in connections:
 	return None
 
+def getTextSize(text):
+	global font
+
+	x = 0
+	for line in text.split("\n"):
+		x = max(x, font.measure(line))
+	if text == "":
+		y = 0
+	else:
+		y = LINEDIST * (1+text.count("\n"))
+	return x, y
+
 def getHeadSize(node):
 	global editdata
 	if editdata['object'] == node and editdata['type'] == 'node':
 		text = editdata['text']
 	else:
 		text = node['head']
-	m = 0
-	for line in text.split("\n"):
-		m = max(m, len(line))
-	x = 7 * m
-	if text == "":
-		y = 0
-	else:
-		y = 14 * (1+text.count("\n"))
-	return x, y
+	return getTextSize(text)
 
 def getBodySize(node):
-	global editdata
+	global editdata, font
 	if editdata['object'] == node and editdata['type'] == 'nodebody':
 		text = editdata['text']
 	else:
 		text = node['body']
-	m = 0
-	for line in text.split("\n"):
-		m = max(m, len(line))
-	x = 7 * m
-	if text == "":
-		y = 0
-	else:
-		y = 14 * (1+text.count("\n"))
-	return x, y
+	return getTextSize(text)
 
 def renderConnection(connection):
 	die("TODO: renderConnection")
@@ -171,11 +168,11 @@ def renderText(x, y, text):
 	renderLines(x, y, [line for line in text.split("\n")])
 
 def renderLines(x, y, lines):
-	global canvas
+	global canvas, font
 
 	for line in lines:
-		canvas.create_text((x, y), anchor="nw", text=line)
-		y += FONTHEIGHT
+		canvas.create_text((x, y), anchor="nw", text=line, font=font)
+		y += LINEDIST
 
 def renderNodeHead(node, editing=False):
 	global focus, canvas, editdata
@@ -476,13 +473,14 @@ def setSaved(b):
 	window.wm_title(title)
 
 def main():
-	global canvas, cursorX, cursorY, window, popupmenu
+	global canvas, cursorX, cursorY, window, popupmenu, font
 
 	popupmenu = None
 	cursorX = 0
 	cursorY = 0
 
 	window = tkinter.Tk()
+	font = font.Font(family=FONT, size=FONTSIZE)
 
 	# menu
 	menu = tkinter.Menu(window)
