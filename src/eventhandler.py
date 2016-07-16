@@ -78,8 +78,11 @@ def onKeyPress(event):
 		if event.keysym == "Tab":
 			editdata['text'] += "\t"
 			render()
-		elif char in string.printable:
-			editdata['text'] += char
+		elif event.keysym == "Right":
+			incCursor()
+			render()
+		elif event.keysym == "Left":
+			editdata['cursor'] = max(0, editdata['cursor']-1)
 			render()
 		elif char == "\\r" and event.state == 20: # Ctrl + Enter
 			obj = editdata['object']
@@ -97,11 +100,15 @@ def onKeyPress(event):
 		elif char == "\\x1b":
 			resetEditdata()
 			render()
-		elif char == "\\x08":
-			editdata['text'] = editdata['text'][:-1]
+		elif char == "\\x08": # backspace
+			cursor = editdata['cursor']
+			editdata['text'] = editdata['text'][:cursor-1] + editdata['text'][cursor:]
+			decCursor()
 			render()
-		elif char == "\\r":
-			editdata['text'] += "\n"
+		elif char != '' and (char in string.printable or char == "\\r"):
+			cursor = editdata['cursor']
+			editdata['text'] = editdata['text'][:cursor] + char + editdata['text'][cursor:]
+			incCursor()
 			render()
 
 def updateMouse(event):

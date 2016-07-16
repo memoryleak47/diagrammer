@@ -4,8 +4,21 @@ def renderConnection(connection):
 	die("TODO: renderConnection")
 
 def renderEditText(x, y, text, cursor):
-	renderLines(x, y, [line for line in text.split("\n")])
-	# TODO render cursor
+	global focus, stdfont
+
+	lines = [line for line in text.split("\n")]
+	renderLines(x, y, lines)
+
+	y = 0
+	for i in range(len(lines)):
+		if cursor <= len(lines[i]):
+			x = 400 - focus[0] + stdfont.measure(lines[i][:cursor]) - getTextSize(text)[0]/2
+			y = 300 - focus[1] + stdfont.metrics()['linespace'] * y - getTextSize(text)[1]/2
+			canvas.create_rectangle((x, y), x+2, y + stdfont.metrics()['linespace'], fill="black")
+			return
+		else:
+			cursor -= len(lines[i])
+			y += 1
 
 def renderText(x, y, text):
 	# TODO source-`code`

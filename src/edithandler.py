@@ -21,3 +21,11 @@ def resetEditdata():
 	editdata['object'] = None
 	editdata['type'] = None
 	editdata['cursor'] = 0
+
+def incCursor():
+	global editdata
+	editdata['cursor'] = min(editdata['cursor']+1, len(editdata['text']))
+
+def decCursor():
+	global editdata
+	editdata['cursor'] = max(0, editdata['cursor']-1)
