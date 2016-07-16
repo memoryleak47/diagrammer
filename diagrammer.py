@@ -264,6 +264,7 @@ def reallyDiscardContent():
 	decision = None
 	if not saved:
 		decisionwindow = tkinter.Tk()
+		decisionwindow.wm_title("Do you really want to discard your current changes?")
 		label = tkinter.Label(decisionwindow, text="Pressing 'Yes' will discard your current changes")
 		buttonYes = tkinter.Button(decisionwindow, text="Yes", command=decideYes)
 		buttonNo = tkinter.Button(decisionwindow, text="Cancel", command=decideNo)
@@ -302,14 +303,15 @@ def menu_openFile():
 def menu_saveFile():
 	global openfilename, nodes, connections
 	if openfilename == None:
-		menu_saveFileAs()
-	else:
-		setSaved(True)
-		saveFile(openfilename, nodes, connections)
+		openfilename = asksaveasfilename()
+	saveFile(openfilename, nodes, connections)
+	setSaved(True)
 
 def menu_saveFileAs():
-	global nodes, connections, window
-	saveFile(asksaveasfilename(), nodes, connections)
+	global nodes, connections, openfilename
+	openfilename = asksaveasfilename()
+	saveFile(openfilename, nodes, connections)
+	setSaved(True)
 
 def menu_close():
 	if reallyDiscardContent():
