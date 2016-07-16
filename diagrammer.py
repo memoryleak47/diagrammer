@@ -186,7 +186,11 @@ def deleteNode(node):
 
 def editNode(node):
 	global nodes
-	die("TODO")
+	die("TODO: editNode")
+
+def editNodeBody(node):
+	global nodes
+	die("TODO: editNodeBody")
 
 # def createConnection(): TODO
 
@@ -201,17 +205,17 @@ def onRightRelease(event):
 	destroyPopup()
 	if dragging == False:
 		obj = getObjectAtMouse()
+		popupmenu = tkinter.Menu(window, tearoff=0)
 		if obj == None:
-			popupmenu = tkinter.Menu(window, tearoff=0)
 			popupmenu.add_command(label="Create Node", command=lambda: createNode(cursorX, cursorY))
 		elif obj["type"] == "node":
-			popupmenu = tkinter.Menu(window, tearoff=0)
 			popupmenu.add_command(label="Delete Node", command=lambda: deleteNode(obj))
-			#popupmenu.add_command(label="Connect To", command=lambda: createConnection(obj))
 			popupmenu.add_command(label="Edit", command=lambda: editNode(obj))
+			#popupmenu.add_command(label="Connect To", command=lambda: createConnection(obj))
 		elif obj["type"] == "connection":
-			popupmenu = tkinter.Menu(window, tearoff=0)
 			popupmenu.add_command(label="Delete Connection", command=lambda: deleteConnection(obj))
+		elif obj['type'] == 'nodebody':
+			popupmenu.add_command(label="Edit", command=lambda: editNodeBody(obj['node']))
 		else:
 			die("wot?")
 		popupmenu.post(event.x_root, event.y_root)
