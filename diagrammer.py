@@ -4,6 +4,7 @@ usage="Usage:\tdiagrammer <file>"
 
 import sys
 import tkinter
+import string
 from tkinter.filedialog import *
 
 PADDING = 6
@@ -72,23 +73,28 @@ def saveFile(filename, nodes, connections):
 def getBodyPosition(node):
 	if node['status'] != 'open':
 		die('getBodyPosition(): node is not open')
-	return node['x'], node['y'] + getHeadSize(node['head'])[1] + 2 * PADDING
+	return node['x'], node['y'] + getHeadSize(node)[1] + 2 * PADDING
 
 def getObjectAtMouse():
 	global canvas, focus, cursorX, cursorY
 	for node in nodes:
-		sizeX, sizeY = getHeadSize(node['head'])
+		sizeX, sizeY = getHeadSize(node)
 		if node["x"] - sizeX/2 - PADDING < cursorX and node["x"] + sizeX/2 + PADDING > cursorX and node["y"] - sizeY/2 - PADDING < cursorY and node["y"] + sizeY/2 + PADDING > cursorY:
 			return node
 		elif node['status'] == 'open':
 			bodyPosX, bodyPosY = getBodyPosition(node)
-			bodySizeX, bodySizeY = getBodySize(node['body'])
+			bodySizeX, bodySizeY = getBodySize(node)
 			if bodyPosX - bodySizeX/2 - PADDING < cursorX and bodyPosX + bodySizeX/2 + PADDING > cursorX and bodyPosY - bodySizeY/2 - PADDING < cursorY and bodyPosY + bodySizeY/2 + PADDING > cursorY:
 				return {'type': 'nodebody', 'node': node}
 	# for connection in connections:
 	return None
 
-def getHeadSize(text):
+def getHeadSize(node):
+	global editdata
+	if editdata['object'] == node and editdata['type'] == 'node':
+		text = editdata['text']
+	else:
+		text = node['head']
 	m = 0
 	for line in text.split("\\n"):
 		m = max(m, len(line))
@@ -99,7 +105,12 @@ def getHeadSize(text):
 		y = 14 * (1+text.count("\\n"))
 	return x, y
 
-def getBodySize(text):
+def getBodySize(node):
+	global editdata
+	if editdata['object'] == node and editdata['type'] == 'nodebody':
+		text = editdata['text']
+	else:
+		text = node['body']
 	m = 0
 	for line in text.split("\\n"):
 		m = max(m, len(line))
@@ -119,7 +130,7 @@ def render():
 	for node in nodes:
 		renderPosX = 400 + node["x"] - focus[0]
 		renderPosY = 300 + node["y"] - focus[1]
-		sizeX, sizeY = getHeadSize(node["head"])
+		sizeX, sizeY = getHeadSize(node)
 		canvas.create_rectangle(renderPosX - sizeX/2 - PADDING, renderPosY - sizeY/2 - PADDING, renderPosX + sizeX/2 + PADDING, renderPosY + sizeY/2 + PADDING, fill=HEADCOLOR)
 
 		# if node is edited
@@ -132,7 +143,7 @@ def render():
 		if node['status'] == 'open':
 			bodyRenderPosX = 400 + getBodyPosition(node)[0] - focus[0]
 			bodyRenderPosY = 300 + getBodyPosition(node)[1] - focus[1]
-			bodySizeX, bodySizeY = getBodySize(node["body"])
+			bodySizeX, bodySizeY = getBodySize(node)
 			canvas.create_rectangle(bodyRenderPosX - bodySizeX/2 - PADDING, bodyRenderPosY - bodySizeY/2 - PADDING, bodyRenderPosX + bodySizeX/2 + PADDING, bodyRenderPosY + bodySizeY/2 + PADDING, fill=BODYCOLOR)
 			# if body is edited
 			if editdata['object'] == node and editdata['type'] == 'nodebody':
@@ -255,9 +266,12 @@ def onRightDrag(event):
 
 def onKeyPress(event):
 	global editdata
-	char = repr(event.char)
+	char = repr(event.char)[1:-1] # 'wow' -> wow
 
-	if char == "'\\r'" and event.state == 20:
+	if char in string.printable:
+		editdata['text'] += char
+		render()
+	elif char == "\\r" and event.state == 20:
 		obj = editdata['object']
 		if obj['type'] == 'node':
 			obj['head'] = editdata['text']
@@ -271,10 +285,16 @@ def onKeyPress(event):
 		editdata['obj'] = None
 		editdata['type'] = None
 		render()
-	elif char == "'\\x1b'":
+	elif char == "\\x1b":
 		editdata['text'] = None
 		editdata['obj'] = None
 		editdata['type'] = None
+		render()
+	elif char == "\\x08":
+		editdata['text'] = editdata['text'][:-1]
+		render()
+	elif char == "\\r":
+		editdata['text'] += "\n"
 		render()
 	else:
 		print(char, event.state)
