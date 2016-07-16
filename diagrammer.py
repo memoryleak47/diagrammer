@@ -255,7 +255,29 @@ def onRightDrag(event):
 
 def onKeyPress(event):
 	global editdata
-	editdata['object'] = None
+	char = repr(event.char)
+
+	if char == "'\\r'" and event.state == 20:
+		obj = editdata['object']
+		if obj['type'] == 'node':
+			obj['head'] = editdata['text']
+		elif obj['type'] == 'nodebody':
+			obj['body'] = editdata['text']
+		elif obj['type'] == 'connection':
+			die("TODO $12")
+		else:
+			die("onKeyPress(): Ctrl+Enter: editdata['obj'] has unknown type")
+		editdata['text'] = None
+		editdata['obj'] = None
+		editdata['type'] = None
+		render()
+	elif char == "'\\x1b'":
+		editdata['text'] = None
+		editdata['obj'] = None
+		editdata['type'] = None
+		render()
+	else:
+		print(char, event.state)
 
 def updateMouse(event):
 	global cursorX, cursorY, focus
