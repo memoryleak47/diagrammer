@@ -264,6 +264,13 @@ def onRightDrag(event):
 	mouseYRight = d['y_root']
 	dragging = True
 
+def resetEditdata():
+	global editdata
+	editdata = dict()
+	editdata['text'] = None
+	editdata['obj'] = None
+	editdata['type'] = None
+
 def onKeyPress(event):
 	global editdata
 	char = repr(event.char)[1:-1] # 'wow' -> wow
@@ -281,14 +288,10 @@ def onKeyPress(event):
 			die("TODO $12")
 		else:
 			die("onKeyPress(): Ctrl+Enter: editdata['obj'] has unknown type")
-		editdata['text'] = None
-		editdata['obj'] = None
-		editdata['type'] = None
+		resetEditdata()
 		render()
 	elif char == "\\x1b":
-		editdata['text'] = None
-		editdata['obj'] = None
-		editdata['type'] = None
+		resetEditdata()
 		render()
 	elif char == "\\x08":
 		editdata['text'] = editdata['text'][:-1]
@@ -344,7 +347,7 @@ def reallyDiscardContent():
 
 def restart(filename=None):
 	global openfilename, dragging, nodes, connections, focus, saved, editdata
-	editdata = {'type': None, 'object': None, 'text': None}
+	resetEditdata()
 	openfilename = filename
 	dragging = False
 	focus = (0, 0) # what coordinates are centered
