@@ -280,14 +280,14 @@ def onKeyPress(event):
 		render()
 	elif char == "\\r" and event.state == 20: # Ctrl + Enter
 		obj = editdata['object']
-		if obj['type'] == 'node':
+		if editdata['type'] == 'node':
 			obj['head'] = editdata['text']
-		elif obj['type'] == 'nodebody':
+		elif editdata['type'] == 'nodebody':
 			obj['body'] = editdata['text']
-		elif obj['type'] == 'connection':
+		elif editdata['type'] == 'connection':
 			die("TODO $12")
 		else:
-			die("onKeyPress(): Ctrl+Enter: editdata['object'] has unknown type")
+			die("onKeyPress(): Ctrl+Enter: editdata['type'] is unknown")
 		resetEditdata()
 		setSaved(False)
 		render()
