@@ -52,40 +52,38 @@ def loadFile(filename):
 				i += 1
 
 		if tokens[0] == "node":
-			nodes.append({'type': 'node', "name": tokens[1], "x": int(tokens[2]), "y": int(tokens[3]), "desc": tokens[4]})
+			nodes.append({'type': 'node', "head": tokens[1], "x": int(tokens[2]), "y": int(tokens[3]), "body": tokens[4]})
 		elif line.startswith("connection"):
-			connections.append({'type': 'connection', "name": tokens[1], "desc": tokens[2]})
+			connections.append({'type': 'connection', "from": tokens[1], "to": tokens[2], "body": tokens[3]})
 		else:
 			die("Could not parse line: " + line)
 
 def saveFile(filename, nodes, connections):
 	f = open(filename, "w")
 	for node in nodes:
-		f.write("node '" + node["name"] + "' '" + str(node['x']) + "' '" + str(node['y']) + "' '" + node['desc'] + "'\n")
+		f.write("node '" + node["head"] + "' '" + str(node['x']) + "' '" + str(node['y']) + "' '" + node['body'] + "'\n")
 	for connection in connections:
-		f.writeline("connection '" + connection["name"] + "' '" + node['desc'] + "'")
+		f.writeline("connection '" + connection["from"] + "' '" + node['to'] + "' '" + node['body'] + "'")
 	f.close()
 
 def getObjectAtMouse():
 	global canvas, focus, cursorX, cursorY
 	for node in nodes:
-		sizeX = getTextWidth(node['name'])
-		sizeY = getTextHeight(node['name'])
+		sizeX, sizeY = getHeadSize(node['head'])
 		if node["x"] - sizeX/2 - PADDING < cursorX and node["x"] + sizeX/2 + PADDING > cursorX and node["y"] - sizeY/2 - PADDING < cursorY and node["y"] + sizeY/2 + PADDING > cursorY:
 			return node
 	# for connection in connections:
 	return None
 
-def getTextWidth(text):
+def getHeadSize(text):
 	m = 0
 	for line in text.split("\\n"):
 		m = max(m, len(line))
-	return 7 * m
-
-def getTextHeight(text):
+	x = 7 * m
 	if text == "":
-		return 0
-	return 14 * (1+text.count("\\n"))
+		y = 0
+	y = 14 * (1+text.count("\\n"))
+	return x, y
 
 def render():
 	global canvas, focus, nodes, connections, chosenObject
@@ -99,10 +97,9 @@ def render():
 	for node in nodes:
 		renderPosX = 400 + node["x"] - focus[0]
 		renderPosY = 300 + node["y"] - focus[1]
-		sizeX = getTextWidth(node["name"])
-		sizeY = getTextHeight(node["name"])
+		sizeX, sizeY = getHeadSize(node["head"])
 		canvas.create_rectangle(renderPosX - sizeX/2 - PADDING, renderPosY - sizeY/2 - PADDING, renderPosX + sizeX/2 + PADDING, renderPosY + sizeY/2 + PADDING, fill="grey")
-		canvas.create_text((renderPosX - sizeX/2, renderPosY - sizeY/2), anchor="nw", text=node["name"])
+		canvas.create_text((renderPosX - sizeX/2, renderPosY - sizeY/2), anchor="nw", text=node["head"])
 		if node == chosenObject:
 			die("chosen?")
 			# TODO render description
@@ -151,7 +148,7 @@ def onRightClick(event):
 
 def createNode(x, y):
 	global nodes
-	nodes.append({'type': 'node', 'name': '', 'x': x, 'y': y, 'desc': ''})
+	nodes.append({'type': 'node', 'head': '', 'x': x, 'y': y, 'body': ''})
 	setSaved(False)
 	render()
 
@@ -271,6 +268,7 @@ def menu_saveFile():
 	if openfilename == None:
 		menu_saveFileAs()
 	else:
+		setSaved(True)
 		saveFile(openfilename, nodes, connections)
 
 def menu_saveFileAs():
