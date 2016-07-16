@@ -103,7 +103,7 @@ def loadFile(filename):
 def saveFile(filename, nodes, connections):
 	f = open(filename, "w")
 	for node in nodes:
-		f.write("node '" + node["head"] + "' '" + str(node['x']) + "' '" + str(node['y']) + "' '" + node['body'] + "'\n")
+		f.write("node '" + node["head"].replace("\n", "\\n") + "' '" + str(node['x']) + "' '" + str(node['y']) + "' '" + node['body'].replace("\n", "\\n") + "'\n")
 	for connection in connections:
 		f.writeline("connection '" + connection["from"] + "' '" + node['to'] + "' '" + node['body'] + "'")
 	f.close()
