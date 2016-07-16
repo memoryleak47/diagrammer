@@ -268,7 +268,7 @@ def resetEditdata():
 	global editdata
 	editdata = dict()
 	editdata['text'] = None
-	editdata['obj'] = None
+	editdata['object'] = None
 	editdata['type'] = None
 
 def onKeyPress(event):
@@ -278,7 +278,7 @@ def onKeyPress(event):
 	if char in string.printable:
 		editdata['text'] += char
 		render()
-	elif char == "\\r" and event.state == 20:
+	elif char == "\\r" and event.state == 20: # Ctrl + Enter
 		obj = editdata['object']
 		if obj['type'] == 'node':
 			obj['head'] = editdata['text']
@@ -287,8 +287,9 @@ def onKeyPress(event):
 		elif obj['type'] == 'connection':
 			die("TODO $12")
 		else:
-			die("onKeyPress(): Ctrl+Enter: editdata['obj'] has unknown type")
+			die("onKeyPress(): Ctrl+Enter: editdata['object'] has unknown type")
 		resetEditdata()
+		setSaved(False)
 		render()
 	elif char == "\\x1b":
 		resetEditdata()
