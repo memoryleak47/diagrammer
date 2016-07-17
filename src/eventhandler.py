@@ -7,6 +7,8 @@ def onClick(event):
 	mouseXLeft = d['x_root']
 	mouseYLeft = d['y_root']
 	draggedObject = getObjectAtMouse()
+	if draggedObject != None and draggedObject['type'] == 'nodebody':
+		draggedObject = None
 
 def onRelease(event):
 	global dragging, draggedObject
