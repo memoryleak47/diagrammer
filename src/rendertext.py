@@ -142,11 +142,7 @@ class EditTextBox:
 		y = yArg
 		cursor = editdata['cursor']
 
-		tokens = self.tokens.copy()
-		if tokens[-1]['type'] == 'newline': # workaround for cursorbug
-			tokens.append({"type": "normal", "str": ""})
-
-		for token in tokens:
+		for token in self.tokens:
 			if token['type'] == 'newline':
 				x = xArg
 				y += editfont.metrics()['linespace']
@@ -163,3 +159,5 @@ class EditTextBox:
 						cursor = -1
 					else:
 						cursor -= len(token['str'])
+		if cursor != -1:
+			canvas.create_rectangle((x, y), x+2, y + editfont.metrics()['linespace'], fill="black")
