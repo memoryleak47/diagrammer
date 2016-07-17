@@ -68,6 +68,7 @@ class TextBox:
 	def render(self, xArg, yArg):
 		global canvas
 		
+		xArg -= self.size[0]/2
 		yArg -= self.size[1]/2
 
 		x = xArg
@@ -82,7 +83,7 @@ class TextBox:
 				y += linespace
 			else:
 				font = self.__getFont(code)
-				canvas.create_text((x, y), text=token['str'], font=font)
+				canvas.create_text((x, y), text=token['str'], font=font, anchor="nw")
 				x += font.measure(token['str'])
 				linespace = max(linespace, font.metrics()['linespace'])
 
@@ -133,6 +134,7 @@ class EditTextBox:
 	def render(self, xArg, yArg):
 		global canvas, editfont, editdata
 		
+		xArg -= self.size[0]/2
 		yArg -= self.size[1]/2
 
 		x = xArg
@@ -143,11 +145,11 @@ class EditTextBox:
 				x = xArg
 				y += editfont.metrics()['linespace']
 			else:
-				canvas.create_text((x, y), text=token['str'], font=editfont)
+				canvas.create_text((x, y), text=token['str'], font=editfont, anchor="nw")
 				x += editfont.measure(token['str'])
 				if cursor != -1:
 					if cursor <= len(token['str']):
-						cx = x - editfont.measure(token['str'][cursor:]) - self.size[0]/2
+						cx = x - editfont.measure(token['str'][cursor:])
 						cy = y
 						canvas.create_rectangle((cx, cy), cx+2, cy + editfont.metrics()['linespace'], fill="black")
 						cursor = -1
