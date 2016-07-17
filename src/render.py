@@ -2,8 +2,8 @@
 
 def renderConnection(connection):
 	global nodes, canvas, focus
-	_from = nodes[connection['from']]
 	_to = nodes[connection['to']]
+	_from = nodes[connection['from'][0]]
 	x0 = 400 + _from['x'] - focus[0]
 	y0 = 300 + _from['y'] - focus[1]
 	x1 = 400 + _to['x'] - focus[0]
@@ -18,7 +18,10 @@ def renderConnection(connection):
 			y1 -= getHeadSize(nodes[connection['to']])[1]/2
 		else:
 			y1 += getHeadSize(nodes[connection['to']])[1]/2
-	canvas.create_line(x0, y0, x1, y1, arrow=tkinter.LAST)
+	for i in connection['from']:
+		x0 = 400 + nodes[i]['x'] - focus[0]
+		y0 = 300 + nodes[i]['y'] - focus[1]
+		canvas.create_line(x0, y0, x1, y1, arrow=tkinter.LAST)
 
 def renderNodeHead(node, editing=False):
 	global focus, canvas, editdata
