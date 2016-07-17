@@ -77,10 +77,10 @@ def onKeyPress(event):
 	char = repr(event.char)[1:-1] # 'wow' -> wow
 
 	if editdata['text'] != None:
-		if event.keysym == "Tab": # TODO deweird
+		if event.keysym == "Tab": # handled as 4 spaces because of font.measure("\t") ~ doesnt work
 			cursor = editdata['cursor']
-			editdata['text'] = editdata['text'][:cursor] + "\t" + editdata['text'][cursor:]
-			incCursor()
+			editdata['text'] = editdata['text'][:cursor] + "    " + editdata['text'][cursor:]
+			editdata['cursor'] += 4
 			render()
 		elif event.keysym == "Right":
 			incCursor()
