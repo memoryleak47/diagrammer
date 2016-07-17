@@ -108,6 +108,11 @@ def onKeyPress(event):
 				editdata['text'] = editdata['text'][:cursor-1] + editdata['text'][cursor:]
 				decCursor()
 				render()
+		elif char == "\\x7f": # remove right
+			cursor = editdata['cursor']
+			if cursor < len(editdata['text']):
+				editdata['text'] = editdata['text'][:cursor] + editdata['text'][cursor+1:]
+				render()
 		elif char != '' and char in (string.printable + "ßöäüÄÖÜ"):
 			cursor = editdata['cursor']
 			editdata['text'] = editdata['text'][:cursor] + char + editdata['text'][cursor:]
@@ -116,6 +121,11 @@ def onKeyPress(event):
 		elif char == "\\r":
 			cursor = editdata['cursor']
 			editdata['text'] = editdata['text'][:cursor] + '\n' + editdata['text'][cursor:]
+			incCursor()
+			render()
+		elif event.keysym == "backslash":
+			cursor = editdata['cursor']
+			editdata['text'] = editdata['text'][:cursor] + "\\" + editdata['text'][cursor:]
 			incCursor()
 			render()
 
