@@ -115,7 +115,7 @@ def onKeyPress(event):
 		elif char == "\\r":
 			cursor = editdata['cursor']
 			editdata['text'] = editdata['text'][:cursor] + '\n' + editdata['text'][cursor:]
-			#incCursor()
+			incCursor()
 			render()
 
 def updateMouse(event):

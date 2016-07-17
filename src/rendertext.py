@@ -75,6 +75,7 @@ class TextBox:
 		y = yArg
 		code = False
 		linespace = 0
+
 		for token in self.tokens:
 			if token['type'] == 'code':
 				code = not code
@@ -140,10 +141,17 @@ class EditTextBox:
 		x = xArg
 		y = yArg
 		cursor = editdata['cursor']
-		for token in self.tokens:
+
+		tokens = self.tokens.copy()
+		if tokens[-1]['type'] == 'newline': # workaround for cursorbug
+			tokens.append({"type": "normal", "str": ""})
+
+		for token in tokens:
 			if token['type'] == 'newline':
 				x = xArg
 				y += editfont.metrics()['linespace']
+				if cursor != -1:
+					cursor -= 1
 			else:
 				canvas.create_text((x, y), text=token['str'], font=editfont, anchor="nw")
 				x += editfont.measure(token['str'])
