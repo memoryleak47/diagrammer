@@ -104,9 +104,10 @@ def onKeyPress(event):
 			render()
 		elif char == "\\x08": # backspace
 			cursor = editdata['cursor']
-			editdata['text'] = editdata['text'][:cursor-1] + editdata['text'][cursor:]
-			decCursor()
-			render()
+			if cursor != 0:
+				editdata['text'] = editdata['text'][:cursor-1] + editdata['text'][cursor:]
+				decCursor()
+				render()
 		elif char != '' and char in string.printable:
 			cursor = editdata['cursor']
 			editdata['text'] = editdata['text'][:cursor] + char + editdata['text'][cursor:]
