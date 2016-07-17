@@ -15,7 +15,7 @@ def restart(filename=None):
 	render()
 
 def main():
-	global canvas, cursorX, cursorY, window, popupmenu, stdfont, codefont
+	global canvas, cursorX, cursorY, window, popupmenu, stdfont, codefont, editfont
 
 	popupmenu = None
 	cursorX = 0
@@ -24,6 +24,7 @@ def main():
 	window = tkinter.Tk()
 	stdfont = tkfont.Font(family=STDFONT[0], size=STDFONT[1])
 	codefont = tkfont.Font(family=CODEFONT[0], size=CODEFONT[1])
+	editfont = tkfont.Font(family=EDITFONT[0], size=EDITFONT[1])
 
 	# menu
 	menu = tkinter.Menu(window)
