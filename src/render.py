@@ -12,14 +12,23 @@ def renderNodeHead(node, editing=False):
 	if editing:
 		box = EditTextBox(editdata['text'])
 		sizeX, sizeY = box.getSize()
+
+		# head box
 		canvas.create_rectangle(renderPosX - sizeX/2 - PADDING, renderPosY - sizeY/2 - PADDING, renderPosX + sizeX/2 + PADDING, renderPosY + sizeY/2 + PADDING, fill=HEADCOLOR)
-		# render edit environment
+
+		# edit box
 		canvas.create_rectangle(renderPosX - sizeX/2 - PADDING/2, renderPosY - sizeY/2 - PADDING/2, renderPosX + sizeX/2 + PADDING/2, renderPosY + sizeY/2 + PADDING/2, fill=EDITCOLOR)
+
+		# text
 		box.render(renderPosX, renderPosY)
 	else:
 		box = TextBox(node['head'])
 		sizeX, sizeY = box.getSize()
+
+		# head box
 		canvas.create_rectangle(renderPosX - sizeX/2 - PADDING, renderPosY - sizeY/2 - PADDING, renderPosX + sizeX/2 + PADDING, renderPosY + sizeY/2 + PADDING, fill=HEADCOLOR)
+
+		# text
 		box.render(renderPosX, renderPosY)
 
 def renderNodeBody(node, editing=False):
@@ -31,14 +40,23 @@ def renderNodeBody(node, editing=False):
 	if editing:
 		box = EditTextBox(editdata['text'])
 		sizeX, sizeY = box.getSize()
+
+		# body box
 		canvas.create_rectangle(renderPosX - sizeX/2 - PADDING, renderPosY - sizeY/2 - PADDING, renderPosX + sizeX/2 + PADDING, renderPosY + sizeY/2 + PADDING, fill=BODYCOLOR)
-		# render edit environment
+
+		# edit box
 		canvas.create_rectangle(renderPosX - sizeX/2 - PADDING/2, renderPosY - sizeY/2 - PADDING/2, renderPosX + sizeX/2 + PADDING/2, renderPosY + sizeY/2 + PADDING/2, fill=EDITCOLOR)
+
+		# text
 		box.render(renderPosX, renderPosY)
 	else:
 		box = TextBox(node['body'])
 		sizeX, sizeY = box.getSize()
+
+		# body box
 		canvas.create_rectangle(renderPosX - sizeX/2 - PADDING, renderPosY - sizeY/2 - PADDING, renderPosX + sizeX/2 + PADDING, renderPosY + sizeY/2 + PADDING, fill=BODYCOLOR)
+
+		# text
 		box.render(renderPosX, renderPosY)
 
 def renderNode(node):

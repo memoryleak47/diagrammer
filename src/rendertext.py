@@ -15,7 +15,7 @@ class TextBox:
 				tmp = ""
 				self.tokens.append({'type': 'newline', 'str': "\n"})
 				i += 1
-			if text[i:i+2] == "\\`":
+			elif text[i:i+2] == "\\`":
 				tmp += "\\`"
 				i += 2
 			elif text[i] == "`":
@@ -48,6 +48,7 @@ class TextBox:
 				font = self.__getFont(code)
 				tmpX += font.measure(token['str'])
 				linespace = max(linespace, font.metrics()['linespace'])
+		y += linespace
 		x = max(x, tmpX)
 		self.size = (x, y)
 
@@ -58,8 +59,11 @@ class TextBox:
 		else:
 			return stdfont
 
-	def getSize(self):
+	def getSize(self): # textsize
 		return self.size
+
+	def getObjectSize(self): # textsize + padding
+		return (self.size[0] + 2*PADDING, self.size[1] + 2*PADDING)
 
 	def render(self, xArg, yArg):
 		global canvas
@@ -116,11 +120,15 @@ class EditTextBox:
 				linespace = 0
 			elif token['type'] == "normal":
 				tmpX += editfont.measure(token['str'])
+		y += editfont.metrics()['linespace']
 		x = max(x, tmpX)
 		self.size = (x, y)
 
-	def getSize(self):
+	def getSize(self): # textsize
 		return self.size
+
+	def getObjectSize(self): # textsize + padding
+		return (self.size[0] + 2*PADDING, self.size[1] + 2*PADDING)
 
 	def render(self, xArg, yArg):
 		global canvas, editfont, editdata

@@ -17,7 +17,7 @@ EDITCOLOR = "white"
 
 STDFONT = ("times", 12)
 CODEFONT = ("Monospace", 12)
-EDITFONT = ("Monospace", 10)
+EDITFONT = ("Monospace", 12)
 
 def die(msg):
 	print(msg)
