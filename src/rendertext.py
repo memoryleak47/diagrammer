@@ -123,12 +123,13 @@ class EditTextBox:
 		return self.size
 
 	def render(self, xArg, yArg):
-		global canvas, editfont
+		global canvas, editfont, editdata
 		
 		yArg -= self.size[1]/2
 
 		x = xArg
 		y = yArg
+		cursor = editdata['cursor']
 		for token in self.tokens:
 			if token['type'] == 'newline':
 				x = xArg
@@ -136,3 +137,11 @@ class EditTextBox:
 			else:
 				canvas.create_text((x, y), text=token['str'], font=editfont)
 				x += editfont.measure(token['str'])
+				if cursor != -1:
+					if cursor <= len(token['str']):
+						cx = x - editfont.measure(token['str'][cursor:]) - self.size[0]/2
+						cy = y
+						canvas.create_rectangle((cx, cy), cx+2, cy + editfont.metrics()['linespace'], fill="black")
+						cursor = -1
+					else:
+						cursor -= len(token['str'])
