@@ -8,7 +8,7 @@ def getHeadSize(node):
 
 def getBodySize(node):
 	if editdata['object'] == node and editdata['type'] == 'nodebody':
-		return EditTextBox(node['body']).getObjectSize()
+		return EditTextBox(editdata['text']).getObjectSize()
 	else:
 		return TextBox(node['body']).getObjectSize()
 

@@ -15,9 +15,9 @@ HEADCOLOR = "red"
 BODYCOLOR = "#AA5555"
 EDITCOLOR = "white"
 
-STDFONT = ("times", 12)
-CODEFONT = ("Monospace", 12)
-EDITFONT = ("Monospace", 12)
+STDFONT = ("times", 10)
+CODEFONT = ("Monospace", 10)
+EDITFONT = ("Monospace", 7)
 
 def die(msg):
 	print(msg)
