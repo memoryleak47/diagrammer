@@ -77,8 +77,10 @@ def onKeyPress(event):
 	char = repr(event.char)[1:-1] # 'wow' -> wow
 
 	if editdata['text'] != None:
-		if event.keysym == "Tab":
-			editdata['text'] += "\t"
+		if event.keysym == "Tab": # TODO deweird
+			cursor = editdata['cursor']
+			editdata['text'] = editdata['text'][:cursor] + "\t" + editdata['text'][cursor:]
+			incCursor()
 			render()
 		elif event.keysym == "Right":
 			incCursor()

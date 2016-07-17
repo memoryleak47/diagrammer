@@ -15,8 +15,11 @@ class TextBox:
 				tmp = ""
 				self.tokens.append({'type': 'newline', 'str': "\n"})
 				i += 1
+			elif text[i:i+2] == "\\\\":
+				tmp += "\\"
+				i += 2
 			elif text[i:i+2] == "\\`":
-				tmp += "\\`"
+				tmp += "`"
 				i += 2
 			elif text[i] == "`":
 				self.tokens.append({'type': 'normal', 'str': tmp})
