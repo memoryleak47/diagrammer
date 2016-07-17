@@ -1,7 +1,24 @@
 #!/usr/bin/python3
 
 def renderConnection(connection):
-	die("TODO: renderConnection")
+	global nodes, canvas, focus
+	_from = nodes[connection['from']]
+	_to = nodes[connection['to']]
+	x0 = 400 + _from['x'] - focus[0]
+	y0 = 300 + _from['y'] - focus[1]
+	x1 = 400 + _to['x'] - focus[0]
+	y1 = 300 + _to['y'] - focus[1]
+	if abs(x0-x1) > abs(y0-y1): # x-distance
+		if x0 < x1:
+			x1 -= getHeadSize(nodes[connection['to']])[0]/2
+		else:
+			x1 += getHeadSize(nodes[connection['to']])[0]/2
+	else:
+		if y0 < y1:
+			y1 -= getHeadSize(nodes[connection['to']])[1]/2
+		else:
+			y1 += getHeadSize(nodes[connection['to']])[1]/2
+	canvas.create_line(x0, y0, x1, y1, arrow=tkinter.LAST)
 
 def renderNodeHead(node, editing=False):
 	global focus, canvas, editdata
