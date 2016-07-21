@@ -1,27 +1,39 @@
 #!/usr/bin/python3
 
+def renderConnectionPaths(connection):
+	global canvas, focus, nodes
+	toX = 400 + nodes[connection['to']]['x'] - focus[0]
+	toY = 300 + nodes[connection['to']]['y'] - focus[1]
+	for src in connection['from']:
+		x = 400 + nodes[src]['x'] - focus[0]
+		y = 300 + nodes[src]['y'] - focus[1]
+		canvas.create_line(x, y, toX, toY)
+
 def renderConnection(connection):
 	global nodes, canvas, focus
-	_to = nodes[connection['to']]
-	_from = nodes[connection['from'][0]]
-	x0 = 400 + _from['x'] - focus[0]
-	y0 = 300 + _from['y'] - focus[1]
-	x1 = 400 + _to['x'] - focus[0]
-	y1 = 300 + _to['y'] - focus[1]
-	if abs(x0-x1) > abs(y0-y1): # x-distance
-		if x0 < x1:
-			x1 -= getHeadSize(nodes[connection['to']])[0]/2
+	if connection['status'] == 'closed':
+		dst = nodes[connection['to']]
+		if connection['anchor'] == 'left':
+			x = dst['x'] - getHeadSize(dst)[0]/2 - 6
+			y = dst['y'] - getHeadSize(dst)[1]/2 + connection['anchoroffset'] + 6
+		elif connection['anchor'] == 'right':
+			x = dst['x'] + getHeadSize(dst)[0]/2 + 6
+			y = dst['y'] - getHeadSize(dst)[1]/2 + connection['anchoroffset'] + 6
+		elif connection['anchor'] == 'top':
+			x = dst['x'] - getHeadSize(dst)[0]/2 + connection['anchoroffset'] + 6
+			y = dst['y'] - getHeadSize(dst)[1]/2 - 6
+		elif connection['anchor'] == 'bot':
+			x = dst['x'] - getHeadSize(dst)[0]/2 + connection['anchoroffset'] + 6
+			y = dst['y'] + getHeadSize(dst)[1]/2 + 6
 		else:
-			x1 += getHeadSize(nodes[connection['to']])[0]/2
+			die("unknown connection anchor=" + str(connection['anchor']))
+
+		x = 400 + x - focus[0]
+		y = 300 + y - focus[1]
+
+		canvas.create_rectangle(x-6, y-6, x+6, y+6, fill=CONNECTIONCOLOR)
 	else:
-		if y0 < y1:
-			y1 -= getHeadSize(nodes[connection['to']])[1]/2
-		else:
-			y1 += getHeadSize(nodes[connection['to']])[1]/2
-	for i in connection['from']:
-		x0 = 400 + nodes[i]['x'] - focus[0]
-		y0 = 300 + nodes[i]['y'] - focus[1]
-		canvas.create_line(x0, y0, x1, y1, arrow=tkinter.LAST)
+		print("open connection yet?")
 
 def renderNodeHead(node, editing=False):
 	global focus, canvas, editdata
@@ -96,6 +108,10 @@ def render():
 	canvas.delete("all")
 	canvas.create_rectangle(0, 0, 800, 600, fill=BACKGROUNDCOLOR)
 	for connection in reversed(connections):
+		renderConnectionPaths(connection)
+
+	for connection in reversed(connections):
 		renderConnection(connection)
+
 	for node in reversed(nodes):
 		renderNode(node)

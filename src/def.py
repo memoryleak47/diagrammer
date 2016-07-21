@@ -12,7 +12,11 @@
 # }
 
 # connection = {
-# 	'type': 'connection'
+# 	'type': 'connection',
+#	'status': 'closed'/'open',
+#	'anchor': 'left'/'right'/'top'/'bot'
+#	'anchoroffset': 'int' # how much you move right/bot from your anchor
+#	'body': 'str'
 # }
 
 # editdata = {

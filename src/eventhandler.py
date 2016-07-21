@@ -53,9 +53,12 @@ def onRightRelease(event):
 		elif obj["type"] == "node":
 			popupmenu.add_command(label="Delete Node", command=lambda: deleteNode(obj))
 			popupmenu.add_command(label="Edit", command=lambda: editNode(obj))
-			#popupmenu.add_command(label="Connect To", command=lambda: createConnection(obj))
+			popupmenu.add_command(label="Add Connection", command=lambda: createConnection(obj))
 		elif obj["type"] == "connection":
 			popupmenu.add_command(label="Delete Connection", command=lambda: deleteConnection(obj))
+			popupmenu.add_command(label="Add Source", command=lambda: addSource(obj))
+			popupmenu.add_command(label="Remove Source", command=lambda: removeSource(obj))
+			popupmenu.add_command(label="Edit", command=lambda: editConnection(obj))
 		elif obj['type'] == 'nodebody':
 			popupmenu.add_command(label="Edit", command=lambda: editNodeBody(obj['node']))
 		else:

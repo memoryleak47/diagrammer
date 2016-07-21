@@ -14,6 +14,7 @@ BACKGROUNDCOLOR = "#AAAAAA"
 HEADCOLOR = "red"
 BODYCOLOR = "#AA5555"
 EDITCOLOR = "white"
+CONNECTIONCOLOR = "blue"
 
 STDFONT = ("times", 10)
 CODEFONT = ("Monospace", 10)

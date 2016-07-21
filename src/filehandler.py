@@ -54,7 +54,7 @@ def loadFile(filename):
 		if tokens[0] == "node":
 			nodes.append({'status': 'closed', 'type': 'node', "head": tokens[1], "x": int(tokens[2]), "y": int(tokens[3]), "body": tokens[4]})
 		elif line.startswith("connection"):
-			connections.append({'status': 'closed', 'type': 'connection', "from": [int(x) for x in tokens[1].split(",")], "to": int(tokens[2]), "body": tokens[3]})
+			connections.append({'status': 'closed', 'type': 'connection', "from": [int(x) for x in tokens[1].split(",")], "to": int(tokens[2]), "anchor": tokens[3], "anchoroffset": int(tokens[4]), "body": tokens[5]})
 		else:
 			die("Could not parse line: " + line)
 
@@ -63,5 +63,5 @@ def saveFile(filename, nodes, connections):
 	for node in nodes:
 		f.write("node '" + node["head"].replace("\n", "\\n").replace("\t", "\\t") + "' '" + str(node['x']) + "' '" + str(node['y']) + "' '" + node['body'].replace("\n", "\\n").replace("\t", "\\t") + "'\n")
 	for connection in connections:
-		f.writeline("connection '" + ",".join(connection["from"]) + "' '" + node['to'] + "' '" + node['body'] + "'")
+		f.writeline("connection '" + ",".join(connection["from"]) + "' '" + node['to'] + "' '" + node['anchor'] + "' '" + str(node['anchoroffset']) + "' '" + node['body'] + "'")
 	f.close()
