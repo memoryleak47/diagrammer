@@ -11,15 +11,26 @@ def onClick(event):
 		draggedObject = None
 
 def onRelease(event):
-	global dragging, draggedObject
+	global dragging, draggedObject, choosedata, nodes
 	if dragging == False:
 		obj = getObjectAtMouse()
-		if obj != None and (obj['type'] == "node" or obj['type'] == "connection"):
-			if obj['status'] == 'closed':
-				obj['status'] = "open"
-			elif obj['status'] == 'open':
-				obj['status'] = "closed"
+		if choosedata['type'] != 'none':
+			if obj['type'] == 'node':
+				if choosedata['type'] == 'remove':
+					if nodes.index(obj) in choosedata['connection']['from']:
+						choosedata['connection']['from'].remove(nodes.index(obj))
+				elif choosedata['type'] == 'add':
+					if nodes.index(obj) not in choosedata['connection']['from']:
+						choosedata['connection']['from'].append(nodes.index(obj))
+			resetChooseData()
 			render()
+		else:
+			if obj != None and (obj['type'] == "node" or obj['type'] == "connection"):
+				if obj['status'] == 'closed':
+					obj['status'] = "open"
+				elif obj['status'] == 'open':
+					obj['status'] = "closed"
+				render()
 		draggedObject = None
 	dragging = False
 
@@ -56,8 +67,8 @@ def onRightRelease(event):
 			popupmenu.add_command(label="Add Connection", command=lambda: createConnection(obj))
 		elif obj["type"] == "connection":
 			popupmenu.add_command(label="Delete Connection", command=lambda: deleteConnection(obj))
-			popupmenu.add_command(label="Add Source", command=lambda: addSource(obj))
-			popupmenu.add_command(label="Remove Source", command=lambda: removeSource(obj))
+			popupmenu.add_command(label="Add Source", command=lambda: chooseAddSource(obj))
+			popupmenu.add_command(label="Remove Source", command=lambda: chooseRemoveSource(obj))
 			popupmenu.add_command(label="Edit", command=lambda: editConnection(obj))
 		elif obj['type'] == 'nodebody':
 			popupmenu.add_command(label="Edit", command=lambda: editNodeBody(obj['node']))

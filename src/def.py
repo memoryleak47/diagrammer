@@ -20,7 +20,7 @@
 # }
 
 # editdata = {
-#	'text': str,
+#	'text': 'str',
 #	'object': node/nodebody/connection,
 #	'type': 'node'/'nodebody'/'connection'
 # }
@@ -28,4 +28,9 @@
 # nodebody = {
 #	'node': node
 #	'type': 'nodebody'
+# }
+
+# choosedata = {
+#	'type': 'none'/'remove'/'add'
+#	'connection': None/connection
 # }

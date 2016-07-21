@@ -1,8 +1,9 @@
 #!/usr/bin/python3
 
 def restart(filename=None):
-	global openfilename, dragging, nodes, connections, focus, saved, editdata
+	global openfilename, dragging, nodes, connections, focus, saved
 	resetEditdata()
+	resetChooseData()
 	openfilename = filename
 	dragging = False
 	focus = (0, 0) # what coordinates are centered
