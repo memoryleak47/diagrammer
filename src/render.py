@@ -14,17 +14,17 @@ def renderConnection(connection):
 	if connection['status'] == 'closed':
 		dst = nodes[connection['to']]
 		if connection['anchor'] == 'left':
-			x = dst['x'] - getHeadSize(dst)[0]/2 - 6
-			y = dst['y'] - getHeadSize(dst)[1]/2 + connection['anchoroffset'] + 6
+			x = dst['x'] - getSize(dst)[0]/2 - 6
+			y = dst['y'] - getSize(dst)[1]/2 + connection['anchoroffset'] + 6
 		elif connection['anchor'] == 'right':
-			x = dst['x'] + getHeadSize(dst)[0]/2 + 6
-			y = dst['y'] - getHeadSize(dst)[1]/2 + connection['anchoroffset'] + 6
+			x = dst['x'] + getSize(dst)[0]/2 + 6
+			y = dst['y'] - getSize(dst)[1]/2 + connection['anchoroffset'] + 6
 		elif connection['anchor'] == 'top':
-			x = dst['x'] - getHeadSize(dst)[0]/2 + connection['anchoroffset'] + 6
-			y = dst['y'] - getHeadSize(dst)[1]/2 - 6
+			x = dst['x'] - getSize(dst)[0]/2 + connection['anchoroffset'] + 6
+			y = dst['y'] - getSize(dst)[1]/2 - 6
 		elif connection['anchor'] == 'bot':
-			x = dst['x'] - getHeadSize(dst)[0]/2 + connection['anchoroffset'] + 6
-			y = dst['y'] + getHeadSize(dst)[1]/2 + 6
+			x = dst['x'] - getSize(dst)[0]/2 + connection['anchoroffset'] + 6
+			y = dst['y'] + getSize(dst)[1]/2 + 6
 		else:
 			die("unknown connection anchor=" + str(connection['anchor']))
 

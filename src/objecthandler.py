@@ -3,14 +3,14 @@
 def getObjectAtMouse():
 	global canvas, focus, cursorX, cursorY, nodes, connections
 	for node in nodes:
-		sizeX, sizeY = getHeadSize(node)
+		sizeX, sizeY = getSize(node)
 		if node["x"] - sizeX/2 < cursorX and node["x"] + sizeX/2 > cursorX and node["y"] - sizeY/2 < cursorY and node["y"] + sizeY/2 > cursorY:
 			return node
 		elif node['status'] == 'open':
-			bodyPosX, bodyPosY = getBodyPosition(node)
-			bodySizeX, bodySizeY = getBodySize(node)
+			bodyPosX, bodyPosY = getPosition(getNodeBody(node))
+			bodySizeX, bodySizeY = getSize(getNodeBody(node))
 			if bodyPosX - bodySizeX/2 < cursorX and bodyPosX + bodySizeX/2 > cursorX and bodyPosY - bodySizeY/2 < cursorY and bodyPosY + bodySizeY/2 > cursorY:
-				return {'type': 'nodebody', 'node': node}
+				return getNodeBody(node)
 	for connection in connections:
 		if connection['status'] == 'closed':
 			die("getObjectAtMouse() cant do closed connection")
