@@ -66,8 +66,8 @@ def renderNodeHead(node, editing=False):
 def renderNodeBody(node, editing=False):
 	global focus, canvas, editdata
 
-	renderPosX = 400 + getBodyPosition(node)[0] - focus[0]
-	renderPosY = 300 + getBodyPosition(node)[1] - focus[1]
+	renderPosX = 400 + getPosition(getNodeBody(node))[0] - focus[0]
+	renderPosY = 300 + getPosition(getNodeBody(node))[1] - focus[1]
 
 	if editing:
 		box = EditTextBox(editdata['text'])
