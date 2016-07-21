@@ -2,11 +2,9 @@
 
 def renderConnectionPaths(connection):
 	global canvas, focus, nodes
-	toX = 400 + nodes[connection['to']]['x'] - focus[0]
-	toY = 300 + nodes[connection['to']]['y'] - focus[1]
+	toX, toY = gameToScreenPos((nodes[connection['to']]['x'], nodes[connection['to']]['y']))
 	for src in connection['from']:
-		x = 400 + nodes[src]['x'] - focus[0]
-		y = 300 + nodes[src]['y'] - focus[1]
+		x, y = gameToScreenPos((nodes[src]['x'], nodes[src]['y']))
 		canvas.create_line(x, y, toX, toY)
 
 def renderConnection(connection):
@@ -28,8 +26,7 @@ def renderConnection(connection):
 		else:
 			die("unknown connection anchor=" + str(connection['anchor']))
 
-		x = 400 + x - focus[0]
-		y = 300 + y - focus[1]
+		x, y = gameToScreenPos((x, y))
 
 		canvas.create_rectangle(x-6, y-6, x+6, y+6, fill=CONNECTIONCOLOR)
 	else:
@@ -38,8 +35,7 @@ def renderConnection(connection):
 def renderNodeHead(node, editing=False):
 	global focus, canvas, editdata
 
-	renderPosX = 400 + node["x"] - focus[0]
-	renderPosY = 300 + node["y"] - focus[1]
+	renderPosX, renderPosY = gameToScreenPos((node["x"], node['y']))
 
 	if editing:
 		box = EditTextBox(editdata['text'])
@@ -66,8 +62,8 @@ def renderNodeHead(node, editing=False):
 def renderNodeBody(node, editing=False):
 	global focus, canvas, editdata
 
-	renderPosX = 400 + getPosition(getNodeBody(node))[0] - focus[0]
-	renderPosY = 300 + getPosition(getNodeBody(node))[1] - focus[1]
+	pos = getPosition(getNodeBody(node))
+	renderPosX, renderPosY = gameToScreenPos(pos)
 
 	if editing:
 		box = EditTextBox(editdata['text'])

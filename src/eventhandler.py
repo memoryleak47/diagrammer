@@ -135,6 +135,5 @@ def onKeyPress(event):
 			render()
 
 def updateMouse(event):
-	global cursorX, cursorY, focus
-	cursorX = event.x - 400 + focus[0]
-	cursorY = event.y - 300 + focus[1]
+	global cursorX, cursorY
+	cursorX, cursorY = screenToGamePos((event.x, event.y))

@@ -15,7 +15,10 @@ def getPosition(thingy):
 
 		return node['x'], node['y'] + headheight/2 + bodyheight/2
 	elif thingy['type'] == 'connection':
-		die("aösldkfj465")
+		if thingy['status'] == 'closed':
+			die("shu")
+		else:
+			die("shbuu")
 
 def getSize(thingy):
 	global editdata
@@ -32,5 +35,5 @@ def getSize(thingy):
 	elif thingy['type'] == 'connection':
 		die("aösldkfj")
 
-def getNodeBody(thingy):
-	return {'node': thingy, 'type': 'nodebody'}
+def getNodeBody(node):
+	return {'node': node, 'type': 'nodebody'}
