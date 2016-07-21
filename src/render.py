@@ -2,7 +2,7 @@
 
 def renderConnectionPaths(connection):
 	global canvas, focus, nodes
-	toX, toY = gameToScreenPos((nodes[connection['to']]['x'], nodes[connection['to']]['y']))
+	toX, toY = gameToScreenPos(getPosition(connection))
 	for src in connection['from']:
 		x, y = gameToScreenPos((nodes[src]['x'], nodes[src]['y']))
 		canvas.create_line(x, y, toX, toY)
