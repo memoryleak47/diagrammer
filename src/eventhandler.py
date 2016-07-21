@@ -86,64 +86,66 @@ def onRightDrag(event):
 	mouseYRight = d['y_root']
 	dragging = True
 
-def onKeyPress(event):
-	global editdata
-	char = repr(event.char)[1:-1] # 'wow' -> wow
+def handleKeyPress(arg):
+	global editdata, cursor
 
-	if editdata['text'] != None:
-		if event.keysym == "Tab": # handled as 4 spaces because of font.measure("\t") ~ doesnt work
-			cursor = editdata['cursor']
-			editdata['text'] = editdata['text'][:cursor] + "    " + editdata['text'][cursor:]
-			editdata['cursor'] += 4
+	if editdata['text'] == None:
+		return
+
+	if arg == "Tab":
+		cursor = editdata['cursor']
+		editdata['text'] = editdata['text'][:cursor] + "    " + editdata['text'][cursor:]
+		editdata['cursor'] += 4
+		render()
+	elif arg == "Right":
+		incCursor()
+		render()
+	elif arg == "Left":
+		decCursor()
+		render()
+	elif arg == "Ctrl+Return":
+		obj = editdata['object']
+		if editdata['type'] == 'node':
+			obj['head'] = editdata['text']
+		elif editdata['type'] == 'nodebody':
+			obj['body'] = editdata['text']
+		elif editdata['type'] == 'connection':
+			obj['body'] = editdata['text']
+		else:
+			die("onKeyPress(): Ctrl+Return: editdata['type'] is unknown")
+		resetEditdata()
+		setSaved(False)
+		render()
+	elif arg == "Escape":
+		resetEditdata()
+		render()
+	elif arg == "RemoveLeft":
+		cursor = editdata['cursor']
+		if cursor != 0:
+			editdata['text'] = editdata['text'][:cursor-1] + editdata['text'][cursor:]
+			decCursor()
 			render()
-		elif event.keysym == "Right":
-			incCursor()
+	elif arg == "RemoveRight":
+		cursor = editdata['cursor']
+		if cursor < len(editdata['text']):
+			editdata['text'] = editdata['text'][:cursor] + editdata['text'][cursor+1:]
 			render()
-		elif event.keysym == "Left":
-			editdata['cursor'] = max(0, editdata['cursor']-1)
-			render()
-		elif char == "\\r" and event.state == 20: # Ctrl + Enter
-			obj = editdata['object']
-			if editdata['type'] == 'node':
-				obj['head'] = editdata['text']
-			elif editdata['type'] == 'nodebody':
-				obj['body'] = editdata['text']
-			elif editdata['type'] == 'connection':
-				obj['body'] = editdata['text']
-			else:
-				die("onKeyPress(): Ctrl+Enter: editdata['type'] is unknown")
-			resetEditdata()
-			setSaved(False)
-			render()
-		elif char == "\\x1b":
-			resetEditdata()
-			render()
-		elif char == "\\x08": # backspace
-			cursor = editdata['cursor']
-			if cursor != 0:
-				editdata['text'] = editdata['text'][:cursor-1] + editdata['text'][cursor:]
-				decCursor()
-				render()
-		elif char == "\\x7f": # remove right
-			cursor = editdata['cursor']
-			if cursor < len(editdata['text']):
-				editdata['text'] = editdata['text'][:cursor] + editdata['text'][cursor+1:]
-				render()
-		elif char != '' and char in (string.printable + "ßöäüÄÖÜ"):
-			cursor = editdata['cursor']
-			editdata['text'] = editdata['text'][:cursor] + char + editdata['text'][cursor:]
-			incCursor()
-			render()
-		elif char == "\\r":
-			cursor = editdata['cursor']
-			editdata['text'] = editdata['text'][:cursor] + '\n' + editdata['text'][cursor:]
-			incCursor()
-			render()
-		elif event.keysym == "backslash":
-			cursor = editdata['cursor']
-			editdata['text'] = editdata['text'][:cursor] + "\\" + editdata['text'][cursor:]
-			incCursor()
-			render()
+	elif arg == "Return":
+		cursor = editdata['cursor']
+		editdata['text'] = editdata['text'][:cursor] + '\n' + editdata['text'][cursor:]
+		incCursor()
+		render()
+	elif arg != '' and arg in (string.printable + "ßöäüÄÖÜ\\"):
+		cursor = editdata['cursor']
+		editdata['text'] = editdata['text'][:cursor] + arg + editdata['text'][cursor:]
+		incCursor()
+		render()
+
+def onKeyPress(event):
+	if event.keysym == 'backslash':
+		handleKeyPress("\\")
+	else:
+		handleKeyPress(repr(event.char)[1:-1])
 
 def updateMouse(event):
 	global cursorX, cursorY

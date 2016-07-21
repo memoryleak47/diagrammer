@@ -46,8 +46,18 @@ def main():
 	window.bind("<ButtonRelease-3>", onRightRelease)
 	window.bind("<B1-Motion>", onDrag) # move node
 	window.bind("<B3-Motion>", onRightDrag) # move screen
-	window.bind("<Key>", onKeyPress) # enter text
 	window.bind("<Motion>", updateMouse)
+
+	window.bind("<Control-Return>", lambda e: handleKeyPress("Ctrl+Return"))
+	window.bind("<Tab>", lambda e: handleKeyPress("Tab"))
+	window.bind("<Left>", lambda e: handleKeyPress("Left"))
+	window.bind("<Right>", lambda e: handleKeyPress("Right"))
+	window.bind("<Escape>", lambda e: handleKeyPress("Escape"))
+	window.bind("<BackSpace>", lambda e: handleKeyPress("RemoveLeft"))
+	window.bind("<Delete>", lambda e: handleKeyPress("RemoveRight"))
+	window.bind("<Return>", lambda e: handleKeyPress("Return"))
+	window.bind("<Key>", onKeyPress)
+
 	canvas = tkinter.Canvas(window, width=800, height=600)
 	canvas.pack()
 
