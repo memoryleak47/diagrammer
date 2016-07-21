@@ -8,13 +8,41 @@ def renderConnectionPaths(connection):
 		canvas.create_line(x, y, toX, toY)
 
 def renderConnection(connection):
-	global nodes, canvas, focus
-	x, y = gameToScreenPos(getPosition(connection))
-	sizeX, sizeY = getSize(connection)
+	global nodes, canvas, focus, editdata
 
-	canvas.create_rectangle(x-sizeX/2, y-sizeY/2, x+sizeX/2, y+sizeY/2, fill=CONNECTIONCOLOR)
 	if connection['status'] == 'open':
-		die("render connection text here pls")
+		renderPosX, renderPosY = gameToScreenPos(getPosition(connection))
+		sizeX, sizeY = getSize(connection)
+
+
+		if editdata != None and editdata['object'] == connection:
+			box = EditTextBox(editdata['text'])
+			sizeX, sizeY = box.getSize()
+
+			# box
+			canvas.create_rectangle(renderPosX - sizeX/2 - PADDING, renderPosY - sizeY/2 - PADDING, renderPosX + sizeX/2 + PADDING, renderPosY + sizeY/2 + PADDING, fill=CONNECTIONCOLOR)
+
+			# edit box
+			canvas.create_rectangle(renderPosX - sizeX/2 - PADDING/2, renderPosY - sizeY/2 - PADDING/2, renderPosX + sizeX/2 + PADDING/2, renderPosY + sizeY/2 + PADDING/2, fill=EDITCOLOR)
+
+			# text
+			box.render(renderPosX, renderPosY)
+		else:
+			# box
+			canvas.create_rectangle(renderPosX - sizeX/2, renderPosY - sizeY/2, renderPosX + sizeX/2, renderPosY + sizeY/2, fill=CONNECTIONCOLOR)
+
+			box = TextBox(connection['body'])
+			sizeX, sizeY = box.getSize()
+
+			# text
+			box.render(renderPosX, renderPosY)
+	else:
+		renderPosX, renderPosY = gameToScreenPos(getPosition(connection))
+		sizeX, sizeY = getSize(connection)
+
+		# box
+		canvas.create_rectangle(renderPosX - sizeX/2, renderPosY - sizeY/2, renderPosX + sizeX/2, renderPosY + sizeY/2, fill=CONNECTIONCOLOR)
+
 
 def renderNodeHead(node, editing=False):
 	global focus, canvas, editdata

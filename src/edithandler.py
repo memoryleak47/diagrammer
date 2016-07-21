@@ -14,6 +14,14 @@ def editNodeBody(node):
 	editdata['text'] = node['body']
 	render()
 
+def editConnection(connection):
+	global nodes, editdata
+	editdata['object'] = connection
+	editdata['type'] = 'connection'
+	editdata['text'] = connection['body']
+	connection['status'] = 'open'
+	render()
+
 def resetEditdata():
 	global editdata
 	editdata = dict()

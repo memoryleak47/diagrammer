@@ -15,25 +15,23 @@ def getPosition(thingy):
 
 		return node['x'], node['y'] + headheight/2 + bodyheight/2
 	elif thingy['type'] == 'connection':
-		if thingy['status'] == 'closed':
-			dst = nodes[thingy['to']]
-			if thingy['anchor'] == 'left':
-				x = dst['x'] - getSize(dst)[0]/2 - CONNECTIONSIZE/2
-				y = dst['y'] - getSize(dst)[1]/2 + thingy['anchoroffset'] + CONNECTIONSIZE/2
-			elif thingy['anchor'] == 'right':
-				x = dst['x'] + getSize(dst)[0]/2 + CONNECTIONSIZE/2
-				y = dst['y'] - getSize(dst)[1]/2 + thingy['anchoroffset'] + CONNECTIONSIZE/2
-			elif thingy['anchor'] == 'top':
-				x = dst['x'] - getSize(dst)[0]/2 + thingy['anchoroffset'] + CONNECTIONSIZE/2
-				y = dst['y'] - getSize(dst)[1]/2 - CONNECTIONSIZE/2
-			elif thingy['anchor'] == 'bot':
-				x = dst['x'] - getSize(dst)[0]/2 + thingy['anchoroffset'] + CONNECTIONSIZE/2
-				y = dst['y'] + getSize(dst)[1]/2 + CONNECTIONSIZE/2
-			else:
-				die("unknown connection anchor=" + str(thingy['anchor']))
-			return x, y
+		sizeX, sizeY = getSize(thingy)
+		dst = nodes[thingy['to']]
+		if thingy['anchor'] == 'left':
+			x = dst['x'] - getSize(dst)[0]/2 - sizeX/2
+			y = dst['y'] - getSize(dst)[1]/2 + thingy['anchoroffset'] + sizeY/2
+		elif thingy['anchor'] == 'right':
+			x = dst['x'] + getSize(dst)[0]/2 + sizeX/2
+			y = dst['y'] - getSize(dst)[1]/2 + thingy['anchoroffset'] + sizeY/2
+		elif thingy['anchor'] == 'top':
+			x = dst['x'] - getSize(dst)[0]/2 + thingy['anchoroffset'] + sizeX/2
+			y = dst['y'] - getSize(dst)[1]/2 - sizeY/2
+		elif thingy['anchor'] == 'bot':
+			x = dst['x'] - getSize(dst)[0]/2 + thingy['anchoroffset'] + sizeX/2
+			y = dst['y'] + getSize(dst)[1]/2 + sizeY/2
 		else:
-			die("shbuu")
+			die("unknown connection anchor=" + str(thingy['anchor']))
+		return x, y
 
 def getSize(thingy):
 	global editdata

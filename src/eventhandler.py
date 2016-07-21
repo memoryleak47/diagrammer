@@ -98,7 +98,7 @@ def onKeyPress(event):
 			elif editdata['type'] == 'nodebody':
 				obj['body'] = editdata['text']
 			elif editdata['type'] == 'connection':
-				die("TODO $12")
+				obj['body'] = editdata['text']
 			else:
 				die("onKeyPress(): Ctrl+Enter: editdata['type'] is unknown")
 			resetEditdata()
