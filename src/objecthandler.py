@@ -12,10 +12,10 @@ def getObjectAtMouse():
 			if bodyPosX - bodySizeX/2 < cursorX and bodyPosX + bodySizeX/2 > cursorX and bodyPosY - bodySizeY/2 < cursorY and bodyPosY + bodySizeY/2 > cursorY:
 				return getNodeBody(node)
 	for connection in connections:
-		if connection['status'] == 'closed':
-			die("getObjectAtMouse() cant do closed connection")
-		else:
-			die("getObjectAtMouse() cant do open connection")
+		x, y = getPosition(connection)
+		sizeX, sizeY = getSize(connection)
+		if x - sizeX/2 < cursorX and x + sizeX/2 > cursorX and y - sizeY/2 < cursorY and y + sizeY/2 > cursorY:
+			return connection
 	return None
 
 def createNode(x, y):

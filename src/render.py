@@ -9,28 +9,12 @@ def renderConnectionPaths(connection):
 
 def renderConnection(connection):
 	global nodes, canvas, focus
-	if connection['status'] == 'closed':
-		dst = nodes[connection['to']]
-		if connection['anchor'] == 'left':
-			x = dst['x'] - getSize(dst)[0]/2 - 6
-			y = dst['y'] - getSize(dst)[1]/2 + connection['anchoroffset'] + 6
-		elif connection['anchor'] == 'right':
-			x = dst['x'] + getSize(dst)[0]/2 + 6
-			y = dst['y'] - getSize(dst)[1]/2 + connection['anchoroffset'] + 6
-		elif connection['anchor'] == 'top':
-			x = dst['x'] - getSize(dst)[0]/2 + connection['anchoroffset'] + 6
-			y = dst['y'] - getSize(dst)[1]/2 - 6
-		elif connection['anchor'] == 'bot':
-			x = dst['x'] - getSize(dst)[0]/2 + connection['anchoroffset'] + 6
-			y = dst['y'] + getSize(dst)[1]/2 + 6
-		else:
-			die("unknown connection anchor=" + str(connection['anchor']))
+	x, y = gameToScreenPos(getPosition(connection))
+	sizeX, sizeY = getSize(connection)
 
-		x, y = gameToScreenPos((x, y))
-
-		canvas.create_rectangle(x-6, y-6, x+6, y+6, fill=CONNECTIONCOLOR)
-	else:
-		print("open connection yet?")
+	canvas.create_rectangle(x-sizeX/2, y-sizeY/2, x+sizeX/2, y+sizeY/2, fill=CONNECTIONCOLOR)
+	if connection['status'] == 'open':
+		die("render connection text here pls")
 
 def renderNodeHead(node, editing=False):
 	global focus, canvas, editdata

@@ -9,6 +9,7 @@ import string
 from tkinter.filedialog import *
 
 PADDING = 6
+CONNECTIONSIZE = 12
 
 BACKGROUNDCOLOR = "#AAAAAA"
 HEADCOLOR = "red"
