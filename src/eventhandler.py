@@ -1,14 +1,23 @@
 #!/usr/bin/python3
 
 def onClick(event):
-	global mouseXLeft, mouseYLeft, draggedObject
+	global mouseXLeft, mouseYLeft, draggedObject, nodes, connections, editdata
 	destroyPopup()
 	d = event.__dict__
 	mouseXLeft = d['x_root']
 	mouseYLeft = d['y_root']
 	draggedObject = getObjectAtMouse()
+
 	if draggedObject != None and draggedObject['type'] == 'nodebody':
 		draggedObject = None
+
+	# close everything, which is not focused
+	for thingy in nodes + connections:
+		if draggedObject != thingy:
+			if editdata['object'] == thingy:
+				resetEditdata()
+			thingy['status'] = 'closed'
+	render()
 
 def onRelease(event):
 	global dragging, draggedObject, choosedata, nodes
