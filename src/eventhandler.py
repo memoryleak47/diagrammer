@@ -14,9 +14,9 @@ def onClick(event):
 	# close everything, which is not focused
 	for thingy in nodes + connections:
 		if draggedObject != thingy:
-			if editdata['object'] == thingy:
-				resetEditdata()
 			thingy['status'] = 'closed'
+	if editdata['object'] != draggedObject:
+		resetEditdata()
 	render()
 
 def onRelease(event):
