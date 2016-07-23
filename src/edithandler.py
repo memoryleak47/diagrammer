@@ -19,6 +19,7 @@ def editConnection(connection):
 	editdata['type'] = 'connection'
 	editdata['text'] = connection['body']
 	connection['status'] = 'open'
+	repositionConnection(connection)
 
 def resetEditdata():
 	global editdata
@@ -32,6 +33,8 @@ def resetEditdata():
 
 	if t == 'node':
 		repositionConnections(o)
+	elif t == 'connection':
+		repositionConnection(o)
 
 def setEditText(text):
 	global editdata
@@ -39,6 +42,8 @@ def setEditText(text):
 	editdata['text'] = text
 	if editdata['type'] == 'node':
 		repositionConnections(editdata['object'])
+	elif editdata['type'] == 'connection':
+		repositionConnection(editdata['object'])
 
 def incCursor():
 	global editdata

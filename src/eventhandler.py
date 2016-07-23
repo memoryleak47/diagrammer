@@ -41,6 +41,9 @@ def onRelease(event):
 					obj['status'] = "open"
 				elif obj['status'] == 'open':
 					obj['status'] = "closed"
+
+				if obj['type'] == 'connection':
+					repositionConnection(obj)
 		draggedObject = None
 	else:
 		if draggedObject != None:

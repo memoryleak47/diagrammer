@@ -38,7 +38,6 @@ def deleteNode(node):
 				srcs.remove(srcs[i])
 			else:
 				i += 1
-			#print(i, srcs, nodes.index(node)) # i = 0; srcs = [1, 2, 3]; 2
 	nodes.remove(node)
 	setSaved(False)
 
