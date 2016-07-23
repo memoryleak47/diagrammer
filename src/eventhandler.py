@@ -41,6 +41,10 @@ def onRelease(event):
 					obj['status'] = "closed"
 				render()
 		draggedObject = None
+	else:
+		if draggedObject != None and draggedObject['type'] == 'connection':
+			repositionConnection(draggedObject)
+			render()
 	dragging = False
 
 def onDrag(event):

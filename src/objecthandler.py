@@ -47,7 +47,9 @@ def deleteNode(node):
 def createConnection(obj):
 	global connections, nodes
 	# obj == dst-node
-	connections.append({'status': 'closed', 'type': 'connection', 'from': list(), 'to': nodes.index(obj), 'anchor': 'left', 'anchoroffset': 0, 'body': ''})
+	connection = {'status': 'closed', 'type': 'connection', 'from': list(), 'to': nodes.index(obj), 'x': obj['x'], 'y': obj['y'], 'body': ''}
+	repositionConnection(connection)
+	connections.append(connection)
 	setSaved(False)
 	render()
 
