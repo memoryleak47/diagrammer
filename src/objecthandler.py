@@ -25,7 +25,21 @@ def createNode(x, y):
 	render()
 
 def deleteNode(node):
-	global nodes
+	global nodes, connections
+	for connection in connections:
+		i = 0
+		srcs = connection['from']
+		while i < len(srcs):
+			# node-ids get lower -> connections should get lower
+			if srcs[i] > nodes.index(node):
+				srcs[i] -= 1
+				i += 1
+			# remove removed connection-sources
+			elif srcs[i] == nodes.index(node):
+				srcs.remove(srcs[i])
+			else:
+				i += 1
+			#print(i, srcs, nodes.index(node)) # i = 0; srcs = [1, 2, 3]; 2
 	nodes.remove(node)
 	setSaved(False)
 	render()

@@ -24,7 +24,7 @@ def onRelease(event):
 	if dragging == False:
 		obj = getObjectAtMouse()
 		if choosedata['type'] != 'none':
-			if obj['type'] == 'node':
+			if obj != None and obj['type'] == 'node':
 				if choosedata['type'] == 'remove':
 					if nodes.index(obj) in choosedata['connection']['from']:
 						choosedata['connection']['from'].remove(nodes.index(obj))
