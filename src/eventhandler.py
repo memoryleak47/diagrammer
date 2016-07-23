@@ -17,7 +17,6 @@ def onClick(event):
 			thingy['status'] = 'closed'
 	if editdata['object'] != draggedObject:
 		resetEditdata()
-	render()
 
 def onRelease(event):
 	global dragging, draggedObject, choosedata, nodes
@@ -32,19 +31,16 @@ def onRelease(event):
 					if nodes.index(obj) not in choosedata['connection']['from']:
 						choosedata['connection']['from'].append(nodes.index(obj))
 			resetChooseData()
-			render()
 		else:
 			if obj != None and (obj['type'] == "node" or obj['type'] == "connection"):
 				if obj['status'] == 'closed':
 					obj['status'] = "open"
 				elif obj['status'] == 'open':
 					obj['status'] = "closed"
-				render()
 		draggedObject = None
 	else:
 		if draggedObject != None and draggedObject['type'] == 'connection':
 			repositionConnection(draggedObject)
-			render()
 	dragging = False
 
 def onDrag(event):
@@ -53,7 +49,6 @@ def onDrag(event):
 	if draggedObject != None:
 		draggedObject['x'] -= mouseXLeft - d['x_root']
 		draggedObject['y'] -= mouseYLeft - d['y_root']
-		render()
 		setSaved(False)
 	mouseXLeft = d['x_root']
 	mouseYLeft = d['y_root']
@@ -94,7 +89,6 @@ def onRightDrag(event):
 	global focus, mouseXRight, mouseYRight, dragging
 	d = event.__dict__
 	focus = (focus[0] + mouseXRight - d['x_root'], focus[1] + mouseYRight - d['y_root'])
-	render()
 	mouseXRight = d['x_root']
 	mouseYRight = d['y_root']
 	dragging = True
@@ -109,13 +103,10 @@ def handleKeyPress(arg):
 		cursor = editdata['cursor']
 		editdata['text'] = editdata['text'][:cursor] + "    " + editdata['text'][cursor:]
 		editdata['cursor'] += 4
-		render()
 	elif arg == "Right":
 		incCursor()
-		render()
 	elif arg == "Left":
 		decCursor()
-		render()
 	elif arg == "Ctrl+Return":
 		obj = editdata['object']
 		if editdata['type'] == 'node':
@@ -128,31 +119,25 @@ def handleKeyPress(arg):
 			die("onKeyPress(): Ctrl+Return: editdata['type'] is unknown")
 		resetEditdata()
 		setSaved(False)
-		render()
 	elif arg == "Escape":
 		resetEditdata()
-		render()
 	elif arg == "RemoveLeft":
 		cursor = editdata['cursor']
 		if cursor != 0:
 			editdata['text'] = editdata['text'][:cursor-1] + editdata['text'][cursor:]
 			decCursor()
-			render()
 	elif arg == "RemoveRight":
 		cursor = editdata['cursor']
 		if cursor < len(editdata['text']):
 			editdata['text'] = editdata['text'][:cursor] + editdata['text'][cursor+1:]
-			render()
 	elif arg == "Return":
 		cursor = editdata['cursor']
 		editdata['text'] = editdata['text'][:cursor] + '\n' + editdata['text'][cursor:]
 		incCursor()
-		render()
 	elif arg != '' and arg in (string.printable + "ßöäüÄÖÜ\\"):
 		cursor = editdata['cursor']
 		editdata['text'] = editdata['text'][:cursor] + arg + editdata['text'][cursor:]
 		incCursor()
-		render()
 
 def onKeyPress(event):
 	if event.keysym == 'backslash':

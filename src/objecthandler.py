@@ -22,7 +22,6 @@ def createNode(x, y):
 	global nodes
 	nodes.append({'status': 'closed', 'type': 'node', 'head': '', 'x': x, 'y': y, 'body': ''})
 	setSaved(False)
-	render()
 
 def deleteNode(node):
 	global nodes, connections
@@ -42,7 +41,6 @@ def deleteNode(node):
 			#print(i, srcs, nodes.index(node)) # i = 0; srcs = [1, 2, 3]; 2
 	nodes.remove(node)
 	setSaved(False)
-	render()
 
 def createConnection(obj):
 	global connections, nodes
@@ -51,10 +49,8 @@ def createConnection(obj):
 	repositionConnection(connection)
 	connections.append(connection)
 	setSaved(False)
-	render()
 
 def deleteConnection(connection):
 	global connections
 	connections.remove(connection)
 	setSaved(False)
-	render()

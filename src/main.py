@@ -13,7 +13,6 @@ def restart(filename=None):
 		nodes = list()
 		connections = list()
 	setSaved(True)
-	render()
 
 def main():
 	global canvas, cursorX, cursorY, window, popupmenu, stdfont, codefont, editfont
@@ -68,4 +67,11 @@ def main():
 	else:
 		die(usage)
 
+	tick()
 	window.mainloop()
+
+def tick():
+	global window
+
+	window.after(40, tick)
+	render()
