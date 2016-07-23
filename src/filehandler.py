@@ -63,5 +63,5 @@ def saveFile(filename, nodes, connections):
 	for node in nodes:
 		f.write("node '" + node["head"].replace("\n", "\\n").replace("\t", "\\t") + "' '" + str(node['x']) + "' '" + str(node['y']) + "' '" + node['body'].replace("\n", "\\n").replace("\t", "\\t") + "'\n")
 	for connection in connections:
-		f.writeline("connection '" + ",".join(connection["from"]) + "' '" + node['to'] + "' '" + node['anchor'] + "' '" + str(node['anchoroffset']) + "' '" + node['body'] + "'")
+		f.write("connection '" + ",".join([str(x) for x in connection["from"]]) + "' '" + str(connection['to']) + "' '" + connection['anchor'] + "' '" + str(connection['anchoroffset']) + "' '" + connection['body'] + "'")
 	f.close()
