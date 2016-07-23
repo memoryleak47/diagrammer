@@ -53,7 +53,7 @@ def onDrag(event):
 	mouseXLeft = d['x_root']
 	mouseYLeft = d['y_root']
 	dragging = True
-
+	updateMouse(event)
 
 def onRightClick(event):
 	global mouseXRight, mouseYRight
@@ -92,6 +92,7 @@ def onRightDrag(event):
 	mouseXRight = d['x_root']
 	mouseYRight = d['y_root']
 	dragging = True
+	updateMouse(event)
 
 def handleKeyPress(arg):
 	global editdata, cursor
