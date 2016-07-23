@@ -56,6 +56,11 @@ def main():
 	window.bind("<BackSpace>", lambda e: handleKeyPress("RemoveLeft"))
 	window.bind("<Delete>", lambda e: handleKeyPress("RemoveRight"))
 	window.bind("<Return>", lambda e: handleKeyPress("Return"))
+	window.bind("<Control-S>", lambda e: menu_saveFileAs())
+	window.bind("<Control-s>", lambda e: menu_saveFile())
+	window.bind("<Control-w>", lambda e: menu_close())
+	window.bind("<Control-o>", lambda e: menu_openFile())
+	window.bind("<Control-n>", lambda e: menu_new())
 	window.bind("<Key>", onKeyPress)
 
 	canvas = tkinter.Canvas(window, width=800, height=600)
