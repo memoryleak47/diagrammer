@@ -22,17 +22,13 @@ def editConnection(connection):
 
 def resetEditdata():
 	global editdata
-	editdata = dict()
 
 	t, o = None, None
-	if 'type' in editdata.keys():
+	if 'editdata' in globals():
 		t = editdata['type']
 		o = editdata['object']
 
-	editdata['text'] = None
-	editdata['object'] = None
-	editdata['type'] = None
-	editdata['cursor'] = 0
+	editdata = {'text': None, 'object': None, 'type': None, 'cursor': 0}
 
 	if t == 'node':
 		repositionConnections(o)

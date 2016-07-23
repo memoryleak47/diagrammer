@@ -1,5 +1,14 @@
 #!/usr/bin/python3
 
+def foldExcept(obj):
+	global nodes, connections
+
+	for thingy in nodes + connections:
+		if obj != thingy:
+			thingy['status'] = 'closed'
+	if editdata['object'] != obj:
+		resetEditdata()
+
 def onClick(event):
 	global mouseXLeft, mouseYLeft, draggedObject, nodes, connections, editdata
 	destroyPopup()
@@ -11,12 +20,7 @@ def onClick(event):
 	if draggedObject != None and draggedObject['type'] == 'nodebody':
 		draggedObject = None
 
-	# close everything, which is not focused
-	for thingy in nodes + connections:
-		if draggedObject != thingy:
-			thingy['status'] = 'closed'
-	if editdata['object'] != draggedObject:
-		resetEditdata()
+	foldExcept(draggedObject)
 
 def onRelease(event):
 	global dragging, draggedObject, choosedata, nodes
