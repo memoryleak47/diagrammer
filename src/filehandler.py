@@ -52,9 +52,13 @@ def loadFile(filename):
 				i += 1
 
 		if tokens[0] == "node":
-			nodes.append({'status': 'closed', 'type': 'node', "head": tokens[1], "x": int(tokens[2]), "y": int(tokens[3]), "body": tokens[4]})
+			nodes.append({'status': 'closed', 'type': 'node', "head": tokens[1], "x": float(tokens[2]), "y": float(tokens[3]), "body": tokens[4]})
 		elif line.startswith("connection"):
-			connections.append({'status': 'closed', 'type': 'connection', "from": [int(x) for x in tokens[1].split(",")], "to": int(tokens[2]), "x": int(tokens[3]), "y": int(tokens[4]), "body": tokens[5]})
+			if tokens[1] == '':
+				fromids = list()
+			else:
+				fromids = [int(x) for x in tokens[1].split(",")]
+			connections.append({'status': 'closed', 'type': 'connection', "from": fromids, "to": int(tokens[2]), "x": float(tokens[3]), "y": float(tokens[4]), "body": tokens[5]})
 		else:
 			die("Could not parse line: " + line)
 
