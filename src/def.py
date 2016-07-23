@@ -21,7 +21,7 @@
 
 # editdata = {
 #	'text': 'str',
-#	'object': node/nodebody/connection,
+#	'object': node/connection,
 #	'type': 'node'/'nodebody'/'connection'
 # }
 

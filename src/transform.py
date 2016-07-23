@@ -25,7 +25,7 @@ def getSize(thingy):
 		else:
 			return TextBox(thingy['head']).getObjectSize()
 	elif thingy['type'] == 'nodebody':
-		if editdata['object'] == thingy and editdata['type'] == 'nodebody':
+		if editdata['object'] == thingy['node'] and editdata['type'] == 'nodebody':
 			return EditTextBox(editdata['text']).getObjectSize()
 		else:
 			return TextBox(thingy['node']['body']).getObjectSize()
@@ -37,6 +37,8 @@ def getSize(thingy):
 				return EditTextBox(editdata['text']).getObjectSize()
 			else:
 				return TextBox(thingy['body']).getObjectSize()
+	else:
+		die("getSize(): awkward type=" + thingy['type'])
 
 def getNodeBody(node):
 	return {'node': node, 'type': 'nodebody'}
