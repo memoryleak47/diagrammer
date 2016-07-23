@@ -11,8 +11,9 @@ class TextBox:
 		tmp = ""
 		while i < len(text):
 			if text[i] == "\n":
-				self.tokens.append({'type': 'normal', 'str': tmp})
-				tmp = ""
+				if tmp != "":
+					self.tokens.append({'type': 'normal', 'str': tmp})
+					tmp = ""
 				self.tokens.append({'type': 'newline', 'str': "\n"})
 				i += 1
 			elif text[i:i+2] == "\\\\":
@@ -102,8 +103,9 @@ class EditTextBox:
 		tmp = ""
 		while i < len(text):
 			if text[i] == "\n":
-				self.tokens.append({'type': 'normal', 'str': tmp})
-				tmp = ""
+				if tmp != "":
+					self.tokens.append({'type': 'normal', 'str': tmp})
+					tmp = ""
 				self.tokens.append({'type': 'newline', 'str': "\n"})
 				i += 1
 			else:
@@ -115,18 +117,12 @@ class EditTextBox:
 		# size calculation
 		x, y = 0, 0
 
-		tmpX = 0
-
 		for token in self.tokens:
 			if token['type'] == "newline":
-				x = max(x, tmpX)
-				tmpX = 0
 				y += editfont.metrics()['linespace']
-				linespace = 0
 			elif token['type'] == "normal":
-				tmpX += editfont.measure(token['str'])
+				x = max(x, editfont.measure(token['str']))
 		y += editfont.metrics()['linespace']
-		x = max(x, tmpX)
 		self.size = (x, y)
 
 	def getSize(self): # textsize
