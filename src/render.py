@@ -45,16 +45,21 @@ def renderConnection(connection):
 
 
 def renderNodeHead(node, editing=False):
-	global focus, canvas, editdata
+	global focus, canvas, editdata, choosedata
 
 	renderPosX, renderPosY = gameToScreenPos((node["x"], node['y']))
+
+	if nodes.index(node) in choosedata['nodeids']:
+		hcolor = CHOOSEHEADCOLOR
+	else:
+		hcolor = HEADCOLOR
 
 	if editing:
 		box = EditTextBox(editdata['text'])
 		sizeX, sizeY = box.getSize()
 
 		# head box
-		canvas.create_rectangle(renderPosX - sizeX/2 - PADDING, renderPosY - sizeY/2 - PADDING, renderPosX + sizeX/2 + PADDING, renderPosY + sizeY/2 + PADDING, fill=HEADCOLOR)
+		canvas.create_rectangle(renderPosX - sizeX/2 - PADDING, renderPosY - sizeY/2 - PADDING, renderPosX + sizeX/2 + PADDING, renderPosY + sizeY/2 + PADDING, fill=hcolor)
 
 		# edit box
 		canvas.create_rectangle(renderPosX - sizeX/2 - PADDING/2, renderPosY - sizeY/2 - PADDING/2, renderPosX + sizeX/2 + PADDING/2, renderPosY + sizeY/2 + PADDING/2, fill=EDITCOLOR)
@@ -66,7 +71,7 @@ def renderNodeHead(node, editing=False):
 		sizeX, sizeY = box.getSize()
 
 		# head box
-		canvas.create_rectangle(renderPosX - sizeX/2 - PADDING, renderPosY - sizeY/2 - PADDING, renderPosX + sizeX/2 + PADDING, renderPosY + sizeY/2 + PADDING, fill=HEADCOLOR)
+		canvas.create_rectangle(renderPosX - sizeX/2 - PADDING, renderPosY - sizeY/2 - PADDING, renderPosX + sizeX/2 + PADDING, renderPosY + sizeY/2 + PADDING, fill=hcolor)
 
 		# text
 		box.render(renderPosX, renderPosY)
