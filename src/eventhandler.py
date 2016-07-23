@@ -39,16 +39,28 @@ def onRelease(event):
 					obj['status'] = "closed"
 		draggedObject = None
 	else:
-		if draggedObject != None and draggedObject['type'] == 'connection':
-			repositionConnection(draggedObject)
+		if draggedObject != None:
+			onDrop(draggedObject)
 	dragging = False
 
+def onDrop(thingy):
+	global connections, nodes
+	if thingy['type'] == 'connection':
+			repositionConnection(thingy)
+
 def onDrag(event):
-	global dragging, mouseXLeft, mouseYLeft, draggedObject, saved
+	global dragging, mouseXLeft, mouseYLeft, draggedObject, saved, nodes
 	d = event.__dict__
 	if draggedObject != None:
 		draggedObject['x'] -= mouseXLeft - d['x_root']
 		draggedObject['y'] -= mouseYLeft - d['y_root']
+
+		# move connections with the node
+		if draggedObject['type'] == 'node':
+			for connection in connections:
+				if connection['to'] == nodes.index(draggedObject):
+					connection['x'] -= mouseXLeft - d['x_root']
+					connection['y'] -= mouseYLeft - d['y_root']
 		setSaved(False)
 	mouseXLeft = d['x_root']
 	mouseYLeft = d['y_root']
