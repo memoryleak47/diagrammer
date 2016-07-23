@@ -15,9 +15,10 @@ def restart(filename=None):
 	setSaved(True)
 
 def main():
-	global canvas, cursorX, cursorY, window, popupmenu, stdfont, codefont, editfont
+	global canvas, cursorX, cursorY, window, popupmenu, stdfont, codefont, editfont, editdata
 
 	popupmenu = None
+	editdata = None
 	cursorX = 0
 	cursorY = 0
 

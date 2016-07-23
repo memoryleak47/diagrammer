@@ -24,7 +24,7 @@ def resetEditdata():
 	global editdata
 
 	t, o = None, None
-	if 'editdata' in globals():
+	if editdata != None:
 		t = editdata['type']
 		o = editdata['object']
 

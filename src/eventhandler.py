@@ -29,10 +29,10 @@ def onRelease(event):
 		if choosedata['type'] != 'none':
 			if obj != None and obj['type'] == 'node':
 				if choosedata['type'] == 'remove':
-					if nodes.index(obj) in choosedata['connection']['from']:
+					if nodes.index(obj) in choosedata['connection']['from'] and nodes.index(obj) != choosedata['connection']['to']:
 						choosedata['connection']['from'].remove(nodes.index(obj))
 				elif choosedata['type'] == 'add':
-					if nodes.index(obj) not in choosedata['connection']['from']:
+					if nodes.index(obj) not in choosedata['connection']['from'] and nodes.index(obj) != choosedata['connection']['to']:
 						choosedata['connection']['from'].append(nodes.index(obj))
 			resetChooseData()
 		else:
