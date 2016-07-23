@@ -40,3 +40,15 @@ def getSize(thingy):
 
 def getNodeBody(node):
 	return {'node': node, 'type': 'nodebody'}
+
+def move(obj, amount):
+	global connections, nodes
+
+	obj['x'] += amount[0]
+	obj['y'] += amount[1]
+
+	if obj['type'] == 'node':
+		for connection in connections:
+			if connection['to'] == nodes.index(obj):
+				connection['x'] += amount[0]
+				connection['y'] += amount[1]

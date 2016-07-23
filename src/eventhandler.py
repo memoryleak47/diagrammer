@@ -52,15 +52,7 @@ def onDrag(event):
 	global dragging, mouseXLeft, mouseYLeft, draggedObject, saved, nodes
 	d = event.__dict__
 	if draggedObject != None:
-		draggedObject['x'] -= mouseXLeft - d['x_root']
-		draggedObject['y'] -= mouseYLeft - d['y_root']
-
-		# move connections with the node
-		if draggedObject['type'] == 'node':
-			for connection in connections:
-				if connection['to'] == nodes.index(draggedObject):
-					connection['x'] -= mouseXLeft - d['x_root']
-					connection['y'] -= mouseYLeft - d['y_root']
+		move(draggedObject, (d['x_root'] - mouseXLeft, d['y_root'] - mouseYLeft))
 		setSaved(False)
 	mouseXLeft = d['x_root']
 	mouseYLeft = d['y_root']
@@ -114,7 +106,7 @@ def handleKeyPress(arg):
 
 	if arg == "Tab":
 		cursor = editdata['cursor']
-		editdata['text'] = editdata['text'][:cursor] + "    " + editdata['text'][cursor:]
+		setEditText(editdata['text'][:cursor] + "    " + editdata['text'][cursor:])
 		editdata['cursor'] += 4
 	elif arg == "Right":
 		incCursor()
@@ -124,32 +116,35 @@ def handleKeyPress(arg):
 		obj = editdata['object']
 		if editdata['type'] == 'node':
 			obj['head'] = editdata['text']
+			resetEditdata()
+			repositionConnections(obj)
 		elif editdata['type'] == 'nodebody':
 			obj['body'] = editdata['text']
+			resetEditdata()
 		elif editdata['type'] == 'connection':
 			obj['body'] = editdata['text']
+			resetEditdata()
 		else:
 			die("onKeyPress(): Ctrl+Return: editdata['type'] is unknown")
-		resetEditdata()
 		setSaved(False)
 	elif arg == "Escape":
 		resetEditdata()
 	elif arg == "RemoveLeft":
 		cursor = editdata['cursor']
 		if cursor != 0:
-			editdata['text'] = editdata['text'][:cursor-1] + editdata['text'][cursor:]
+			setEditText(editdata['text'][:cursor-1] + editdata['text'][cursor:])
 			decCursor()
 	elif arg == "RemoveRight":
 		cursor = editdata['cursor']
 		if cursor < len(editdata['text']):
-			editdata['text'] = editdata['text'][:cursor] + editdata['text'][cursor+1:]
+			setEditText(editdata['text'][:cursor] + editdata['text'][cursor+1:])
 	elif arg == "Return":
 		cursor = editdata['cursor']
-		editdata['text'] = editdata['text'][:cursor] + '\n' + editdata['text'][cursor:]
+		setEditText(editdata['text'][:cursor] + '\n' + editdata['text'][cursor:])
 		incCursor()
 	elif arg != '' and arg in (string.printable + "ßöäüÄÖÜ\\"):
 		cursor = editdata['cursor']
-		editdata['text'] = editdata['text'][:cursor] + arg + editdata['text'][cursor:]
+		setEditText(editdata['text'][:cursor] + arg + editdata['text'][cursor:])
 		incCursor()
 
 def onKeyPress(event):

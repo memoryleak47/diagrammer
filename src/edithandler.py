@@ -5,6 +5,7 @@ def editNode(node):
 	editdata['object'] = node
 	editdata['type'] = 'node'
 	editdata['text'] = node['head']
+	repositionConnections(node)
 
 def editNodeBody(node):
 	global nodes, editdata
@@ -22,10 +23,26 @@ def editConnection(connection):
 def resetEditdata():
 	global editdata
 	editdata = dict()
+
+	t, o = None, None
+	if 'type' in editdata.keys():
+		t = editdata['type']
+		o = editdata['object']
+
 	editdata['text'] = None
 	editdata['object'] = None
 	editdata['type'] = None
 	editdata['cursor'] = 0
+
+	if t == 'node':
+		repositionConnections(o)
+
+def setEditText(text):
+	global editdata
+
+	editdata['text'] = text
+	if editdata['type'] == 'node':
+		repositionConnections(editdata['object'])
 
 def incCursor():
 	global editdata
