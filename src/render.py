@@ -15,7 +15,7 @@ def renderConnection(connection):
 		sizeX, sizeY = getSize(connection)
 
 
-		if editdata != None and editdata['object'] == connection:
+		if editdata['object'] == connection:
 			box = EditTextBox(editdata['text'])
 			sizeX, sizeY = box.getSize()
 
@@ -107,17 +107,15 @@ def renderNodeBody(node, editing=False):
 def renderNode(node):
 	global editdata
 	# if node is edited
-	if editdata['object'] == node:
-		renderNodeHead(node, editing=(editdata['type'] == 'node'))
-		if node['status'] == 'open':
-			renderNodeBody(node, editing=(editdata['type'] == 'nodebody'))
-	else:
-		renderNodeHead(node)
-		if node['status'] == 'open':
-			renderNodeBody(node)
+	edithead = (editdata['object'] == node)
+	renderNodeHead(node, editing=edithead)
+
+	if node['status'] == 'open':
+		editbody = (editdata['object'] == getNodeBody(node))
+		renderNodeBody(node, editing=editbody)
 
 def render():
-	global canvas, nodes, connections
+	global canvas, nodes, connections, editdata
 	canvas.delete("all")
 	canvas.create_rectangle(0, 0, 800, 600, fill=BACKGROUNDCOLOR)
 	for connection in reversed(connections):

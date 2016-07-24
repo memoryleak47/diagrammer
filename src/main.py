@@ -79,5 +79,5 @@ def main():
 def tick():
 	global window
 
-	window.after(40, tick)
+	window.after(80, tick) # 40 is weirdish
 	render()

@@ -121,19 +121,20 @@ def handleKeyPress(arg):
 		decCursor()
 	elif arg == "Ctrl+Return":
 		obj = editdata['object']
-		if editdata['type'] == 'node':
-			obj['head'] = editdata['text']
-			resetEditdata()
-			repositionConnections(obj)
-		elif editdata['type'] == 'nodebody':
-			obj['body'] = editdata['text']
-			resetEditdata()
-		elif editdata['type'] == 'connection':
-			obj['body'] = editdata['text']
-			resetEditdata()
-		else:
-			die("onKeyPress(): Ctrl+Return: editdata['type'] is unknown")
-		setSaved(False)
+		if obj != None:
+			if obj['type'] == 'node':
+				obj['head'] = editdata['text']
+				resetEditdata()
+				repositionConnections(obj)
+			elif obj['type'] == 'nodebody':
+				obj['node']['body'] = editdata['text']
+				resetEditdata()
+			elif obj['type'] == 'connection':
+				obj['body'] = editdata['text']
+				resetEditdata()
+			else:
+				die("onKeyPress(): Ctrl+Return: editdata['object']['type'] is unknown")
+			setSaved(False)
 	elif arg == "Escape":
 		resetEditdata()
 	elif arg == "RemoveLeft":

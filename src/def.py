@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-# definition:
+#dicts
 
 # node = {
 #	'type': 'node',
@@ -21,7 +21,7 @@
 
 # editdata = {
 #	'text': 'str',
-#	'object': node/connection,
+#	'object': node/nodebody/connection,
 #	'type': 'node'/'nodebody'/'connection'
 # }
 
@@ -34,3 +34,8 @@
 #	'type': 'none'/'remove'/'add'
 #	'connection': None/connection
 # }
+
+#render
+
+# The node(body)/connection-box has the size of textbox.getObjectSize() -> textsize + PADDINGstuff
+# If edited: a white box is added with the size textsize + PADDINGstuff/2
