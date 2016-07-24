@@ -2,32 +2,26 @@
 
 def getObjectAtMouse():
 	global canvas, focus, cursorX, cursorY, nodes, connections
-	for node in nodes:
-		sizeX, sizeY = getSize(node)
-		if node["x"] - sizeX/2 < cursorX and node["x"] + sizeX/2 > cursorX and node["y"] - sizeY/2 < cursorY and node["y"] + sizeY/2 > cursorY:
-			return node
-		elif node['status'] == 'open':
-			bodyPosX, bodyPosY = getPosition(getNodeBody(node))
-			bodySizeX, bodySizeY = getSize(getNodeBody(node))
-			if bodyPosX - bodySizeX/2 < cursorX and bodyPosX + bodySizeX/2 > cursorX and bodyPosY - bodySizeY/2 < cursorY and bodyPosY + bodySizeY/2 > cursorY:
-				return getNodeBody(node)
-	for connection in connections:
-		x, y = getPosition(connection)
-		sizeX, sizeY = getSize(connection)
-		if x - sizeX/2 < cursorX and x + sizeX/2 > cursorX and y - sizeY/2 < cursorY and y + sizeY/2 > cursorY:
-			return connection
+	l = nodes + connections
+	if nodeBodyVisible():
+		l.append(getVisibleNodeBody())
+
+	for thingy in l:
+		sizeX, sizeY = thingy.getSize()
+		if thingy.getX() - sizeX/2 < cursorX and thingy.getX() + sizeX/2 > cursorX and thingy.getY() - sizeY/2 < cursorY and thingy.getY() + sizeY/2 > cursorY:
+			return thingy
 	return None
 
 def createNode(x, y):
 	global nodes
-	nodes.append({'status': 'closed', 'type': 'node', 'head': '', 'x': x, 'y': y, 'body': ''})
+	nodes.append(Node(text='', x=x, y=y, bodytext=''))
 	setSaved(False)
 
 def deleteNode(node):
 	global nodes, connections
 	for connection in connections:
 		i = 0
-		srcs = connection['from']
+		srcs = connection.getSrcIds()
 		while i < len(srcs):
 			# node-ids get lower -> connections should get lower
 			if srcs[i] > nodes.index(node):
@@ -44,8 +38,8 @@ def deleteNode(node):
 def createConnection(obj):
 	global connections, nodes
 	# obj == dst-node
-	connection = {'status': 'closed', 'type': 'connection', 'from': list(), 'to': nodes.index(obj), 'x': obj['x'], 'y': obj['y'], 'body': ''}
-	repositionConnection(connection)
+	connection = Connection(dstid=nodes.index(obj), x=obj.getX(), y=obj.getY())
+	connection.update()
 	connections.append(connection)
 	setSaved(False)
 

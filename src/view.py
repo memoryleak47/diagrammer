@@ -1,9 +1,9 @@
 #!/usr/bin/python
 
-def gameToScreenPos(position):
+def gameToScreenPos(x, y):
 	global focus
-	return 400 + position[0] - focus[0], 300 + position[1] - focus[1]
+	return 400 + x - focus[0], 300 + y - focus[1]
 
-def screenToGamePos(position):
+def screenToGamePos(x, y):
 	global focus
-	return position[0] - 400 + focus[0], position[1] - 300 + focus[1]
+	return x - 400 + focus[0], y - 300 + focus[1]

@@ -1,21 +1,17 @@
 #!/usr/bin/python3
 
-def resetChooseData():
-	global choosedata
-	choosedata = {'type': 'none', 'connection': None, 'nodeids': list()}
-
 def chooseAddSource(connection):
-	global choosedata, nodes
+	global choosedata, nodes, status
 	nodeids = list()
 	for i in range(len(nodes)):
-		if i not in connection['from'] and i != connection['to']:
+		if i not in connection.getSrcIds() and i != connection.getDstId():
 			nodeids.append(i)
-	choosedata = {'type': 'add', 'connection': connection, 'nodeids': nodeids}
+	status = {'type': 'choose_add', 'connection': connection, 'nodeids': nodeids, 'connection': connection}
 	
 def chooseRemoveSource(connection):
-	global choosedata
+	global status
 	nodeids = list()
 	for i in range(len(nodes)):
-		if i in connection['from'] and i != connection['to']:
+		if i in connection.getSrcIds() and i != connection.getDstId():
 			nodeids.append(i)
-	choosedata = {'type': 'remove', 'connection': connection, 'nodeids': nodeids}
+	status = {'type': 'choose_remove', 'connection': connection, 'nodeids': nodeids, 'connection': connection}

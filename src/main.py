@@ -2,8 +2,7 @@
 
 def restart(filename=None):
 	global openfilename, dragging, nodes, connections, focus, saved
-	resetEditdata()
-	resetChooseData()
+	resetStatus()
 	openfilename = filename
 	dragging = False
 	focus = (0, 0) # what coordinates are centered
@@ -16,10 +15,10 @@ def restart(filename=None):
 	render()
 
 def main():
-	global canvas, cursorX, cursorY, window, rightclickmenu, stdfont, codefont, editfont, editdata
+	global canvas, cursorX, cursorY, window, rightclickmenu, stdfont, codefont, editfont, status
 
 	rightclickmenu = None
-	editdata = None
+	status = None
 	cursorX = 0
 	cursorY = 0
 

@@ -1,41 +1,30 @@
 #!/usr/bin/python3
 
-#dicts
+# plan
 
-# node = {
-#	'type': 'node',
-#	'status': 'closed'/'open',
-#	'x': 12,
-#	'y': 12,
-#	'head': 'str',
-#	'body': 'str'
-# }
+"""
+class Box:
+	click()
+	rightClick()
+	drag(to)
+	drop()
+	getType()
+	getColor()
+	getPadding()
+	render()
 
-# connection = {
-# 	'type': 'connection',
-#	'status': 'closed'/'open',
-#	'x': 'int'
-#	'y': 'int'
-#	'body': 'str'
-# }
+class Node(Box):
+	getNodeBody()
 
-# editdata = {
-#	'text': 'str',
-#	'object': node/nodebody/connection,
-#	'type': 'node'/'nodebody'/'connection'
-# }
+class NodeBody(Box):
+	getNode()
 
-# nodebody = {
-#	'node': node
-#	'type': 'nodebody'
-# }
+class Connection(Box):
+	renderPaths()
 
-# choosedata = {
-#	'type': 'none'/'remove'/'add'
-#	'connection': None/connection
-# }
+"""
 
-#render
-
-# The node(body)/connection-box has the size of textbox.getObjectSize() -> textsize + PADDINGstuff
-# If edited: a white box is added with the size textsize + PADDINGstuff/2
+# global status = {'type': 'edit', 'object': Box, 'text': str}
+# or {'type': 'opened', 'object': NodeBody/Connection)
+# or {'type': 'choose', 'highlight': list()} # missing data on what todo if chosen?
+# or {'type': 'none'}

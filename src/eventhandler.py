@@ -1,63 +1,54 @@
 #!/usr/bin/python3
 
 def foldExcept(obj):
-	global nodes, connections
+	global nodes, connections, status
 
+	"""
 	for thingy in nodes + connections:
 		if obj != thingy:
 			thingy['status'] = 'closed'
-	if editdata['object'] != obj:
-		resetEditdata()
+	if status['object'] != obj:
+		resetStatus()
+	"""
 
 def onClick(event):
-	global mouseXLeft, mouseYLeft, draggedObject, nodes, connections, editdata
+	global mouseXLeft, mouseYLeft, draggedObject, nodes, connections
 	destroyRightClickMenu()
 	mouseXLeft = event.x_root
 	mouseYLeft = event.y_root
 	draggedObject = getObjectAtMouse()
 
-	if draggedObject != None and draggedObject['type'] == 'nodebody':
+	if draggedObject != None and draggedObject.getType() == 'nodebody':
 		draggedObject = None
 
 	foldExcept(draggedObject)
 
 def onRelease(event):
-	global dragging, draggedObject, choosedata, nodes
-	if dragging == False:
-		obj = getObjectAtMouse()
-		if choosedata['type'] != 'none':
-			if obj != None and obj['type'] == 'node':
-				if choosedata['type'] == 'remove':
-					if nodes.index(obj) in choosedata['connection']['from'] and nodes.index(obj) != choosedata['connection']['to']:
-						choosedata['connection']['from'].remove(nodes.index(obj))
-				elif choosedata['type'] == 'add':
-					if nodes.index(obj) not in choosedata['connection']['from'] and nodes.index(obj) != choosedata['connection']['to']:
-						choosedata['connection']['from'].append(nodes.index(obj))
-			resetChooseData()
-		else:
-			if obj != None and (obj['type'] == "node" or obj['type'] == "connection"):
-				if obj['status'] == 'closed':
-					obj['status'] = "open"
-				elif obj['status'] == 'open':
-					obj['status'] = "closed"
-
-				if obj['type'] == 'connection':
-					repositionConnection(obj)
-		draggedObject = None
-	else:
+	global dragging, draggedObject, choosedata, nodes, status
+	if dragging:
 		if draggedObject != None:
-			onDrop(draggedObject)
+			draggedObject.drop()
+	else:
+		obj = getObjectAtMouse()
+		if obj != None:
+			if status['type'].startswith("choose"):
+				if obj.getType() == 'node':
+					if status['type'] == 'choose_add':
+						status['connection'].addSrc(obj)
+					elif status['type'] == 'choose_remove':
+						status['connection'].removeSrc(obj)
+					else:
+						die("wot?")
+				resetStatus()
+			else:
+				obj.click(event.x_root, event.y_root)
+	draggedObject = None
 	dragging = False
-
-def onDrop(thingy):
-	global connections, nodes
-	if thingy['type'] == 'connection':
-			repositionConnection(thingy)
 
 def onDrag(event):
 	global dragging, mouseXLeft, mouseYLeft, draggedObject, saved, nodes
 	if draggedObject != None:
-		move(draggedObject, (event.x_root - mouseXLeft, event.y_root - mouseYLeft))
+		draggedObject.drag(event.x_root - mouseXLeft, event.y_root - mouseYLeft)
 		setSaved(False)
 	mouseXLeft = event.x_root
 	mouseYLeft = event.y_root
@@ -70,68 +61,76 @@ def onRightClick(event):
 	mouseYRight = event.y_root
 
 def onRightRelease(event):
-	global dragging, window, cursorX, cursorY
+	global dragging, window, cursorX, cursorY, rightclickmenu
 	destroyRightClickMenu()
 	if dragging == False:
-		openRightClickMenu((event.x_root, event.y_root))
+		obj = getObjectAtMouse()
+		if obj != None:
+			obj.rightClick(event.x_root, event.y_root)
+		else:
+			rightclickmenu = tkinter.Menu(window, tearoff=0)
+			rightclickmenu.add_command(label="Create Node", command=lambda: createNode(cursorX, cursorY))
+			rightclickmenu.post(event.x_root, event.y_root)
 	dragging = False
 
 def onRightDrag(event):
 	global focus, mouseXRight, mouseYRight, dragging
+	"""
 	focus = (focus[0] + mouseXRight - d['x_root'], focus[1] + mouseYRight - d['y_root'])
 	mouseXRight = event.x_root
 	mouseYRight = event.y_root
 	dragging = True
+	"""
 	updateMouse(event)
 
 def handleKeyPress(arg):
-	global editdata, cursor
+	global status, cursor
 
-	if editdata['text'] == None:
+	if status['text'] == None:
 		return
 
 	if arg == "Tab":
-		cursor = editdata['cursor']
-		setEditText(editdata['text'][:cursor] + "    " + editdata['text'][cursor:])
-		editdata['cursor'] += 4
+		cursor = status['cursor']
+		status['text'] = status['text'][:cursor] + "    " + status['text'][cursor:]
+		status['cursor'] += 4
 	elif arg == "Right":
 		incCursor()
 	elif arg == "Left":
 		decCursor()
 	elif arg == "Ctrl+Return":
-		obj = editdata['object']
+		obj = status['object']
 		if obj != None:
-			if obj['type'] == 'node':
-				obj['head'] = editdata['text']
-				resetEditdata()
-				repositionConnections(obj)
-			elif obj['type'] == 'nodebody':
-				obj['node']['body'] = editdata['text']
-				resetEditdata()
-			elif obj['type'] == 'connection':
-				obj['body'] = editdata['text']
-				resetEditdata()
+			if obj.getType() == 'node':
+				obj.setText(status['text'])
+				resetStatus()
+				obj.updateConnections()
+			elif obj.getType() == 'nodebody':
+				obj.setText(status['text'])
+				resetStatus()
+			elif obj.getType() == 'connection':
+				obj.setText(status['text'])
+				resetStatus()
 			else:
-				die("onKeyPress(): Ctrl+Return: editdata['object']['type'] is unknown")
+				die("onKeyPress(): Ctrl+Return: status['object']['type'] is unknown")
 			setSaved(False)
 	elif arg == "Escape":
-		resetEditdata()
+		resetStatus()
 	elif arg == "RemoveLeft":
-		cursor = editdata['cursor']
+		cursor = status['cursor']
 		if cursor != 0:
-			setEditText(editdata['text'][:cursor-1] + editdata['text'][cursor:])
+			status['text'] = status['text'][:cursor-1] + status['text'][cursor:]
 			decCursor()
 	elif arg == "RemoveRight":
-		cursor = editdata['cursor']
-		if cursor < len(editdata['text']):
-			setEditText(editdata['text'][:cursor] + editdata['text'][cursor+1:])
+		cursor = status['cursor']
+		if cursor < len(status['text']):
+			status['text'] = status['text'][:cursor] + status['text'][cursor+1:]
 	elif arg == "Return":
-		cursor = editdata['cursor']
-		setEditText(editdata['text'][:cursor] + '\n' + editdata['text'][cursor:])
+		cursor = status['cursor']
+		status['text'] = status['text'][:cursor] + '\n' + status['text'][cursor:]
 		incCursor()
 	elif arg != '' and arg in (string.printable + "ßöäüÄÖÜ\\"):
-		cursor = editdata['cursor']
-		setEditText(editdata['text'][:cursor] + arg + editdata['text'][cursor:])
+		cursor = status['cursor']
+		status['text'] = status['text'][:cursor] + arg + status['text'][cursor:]
 		incCursor()
 
 def onKeyPress(event):
@@ -142,4 +141,4 @@ def onKeyPress(event):
 
 def updateMouse(event):
 	global cursorX, cursorY
-	cursorX, cursorY = screenToGamePos((event.x, event.y))
+	cursorX, cursorY = screenToGamePos(event.x, event.y)

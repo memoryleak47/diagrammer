@@ -1,0 +1,192 @@
+#!/usr/bin/python3
+
+class Box:
+	def __init__(self):
+		self.__x = 0
+		self.__y = 0
+		self.__text = ""
+
+	def getPadding(self):
+		return 6, 6
+
+	def __tokenize(self):
+		if self.isEdited():
+			text = status['text']
+			tokens = list()
+
+			# tokenize
+			i = 0
+			tmp = ""
+			while i < len(text):
+				if text[i] == "\n":
+					if tmp != "":
+						tokens.append({'type': 'normal', 'str': tmp})
+						tmp = ""
+					tokens.append({'type': 'newline', 'str': "\n"})
+					i += 1
+				else:
+					tmp += text[i]
+					i += 1
+			if tmp != "":
+				tokens.append({'type': 'normal', 'str': tmp})
+			return tokens
+		else:
+			text = self.getText()
+			tokens = list()
+
+			# tokenize
+			i = 0
+			tmp = ""
+			while i < len(text):
+				if text[i] == "\n":
+					if tmp != "":
+						tokens.append({'type': 'normal', 'str': tmp})
+						tmp = ""
+					tokens.append({'type': 'newline', 'str': "\n"})
+					i += 1
+				elif text[i:i+2] == "\\\\":
+					tmp += "\\"
+					i += 2
+				elif text[i:i+2] == "\\`":
+					tmp += "`"
+					i += 2
+				elif text[i] == "`":
+					tokens.append({'type': 'normal', 'str': tmp})
+					tokens.append({'type': 'code', 'str': "`"})
+					tmp = ""
+					i += 1
+				else:
+					tmp += text[i]
+					i += 1
+			if tmp != "":
+				tokens.append({'type': 'normal', 'str': tmp})
+			return tokens
+
+	def getTextSize(self):
+		global status
+		tokens = self.__tokenize()
+
+		if self.isEdited():
+			x, y = 0, 0
+
+			for token in tokens:
+				if token['type'] == "newline":
+					y += editfont.metrics()['linespace']
+				elif token['type'] == "normal":
+					x = max(x, editfont.measure(token['str']))
+			y += editfont.metrics()['linespace']
+			return x, y
+		else:
+			x, y = 0, 0
+
+			tmpX = 0
+			linespace = 0
+
+			code = False
+			for token in tokens:
+				if token['type'] == "code":
+					code = not code
+				elif token['type'] == "newline":
+					x = max(x, tmpX)
+					tmpX = 0
+					y += linespace
+					linespace = 0
+				elif token['type'] == "normal":
+					if code:
+						font = codefont
+					else:
+						font = stdfont
+					tmpX += font.measure(token['str'])
+					linespace = max(linespace, font.metrics()['linespace'])
+			y += linespace
+			x = max(x, tmpX)
+			return x, y
+
+	def getSize(self):
+		_ = self.getTextSize()
+		return _[0] + 2*self.getPadding()[0], _[1] + 2*self.getPadding()[1]
+
+	def render(self):
+		global canvas
+		tokens = self.__tokenize()
+		size = self.getTextSize()
+		padding = self.getPadding()
+
+		xArg, yArg = gameToScreenPos(self.getX() - size[0]/2, self.getY() - size[1]/2)
+
+		canvas.create_rectangle(xArg - padding[0], yArg - padding[1], xArg + size[0] + padding[0], yArg + size[1] + padding[1], fill=self.getColor())
+
+		x = xArg
+		y = yArg
+
+		if self.isEdited():
+			canvas.create_rectangle(xArg - padding[0]/2, yArg - padding[1]/2, xArg + size[0] + padding[0]/2, yArg + size[1] + padding[1]/2, fill="white")
+			cursor = status['cursor']
+
+			for token in tokens:
+				if token['type'] == 'newline':
+					x = xArg
+					y += editfont.metrics()['linespace']
+					if cursor != -1:
+						cursor -= 1
+				else:
+					canvas.create_text((x, y), text=token['str'], font=editfont, anchor="nw")
+					x += editfont.measure(token['str'])
+					if cursor != -1:
+						if cursor <= len(token['str']):
+							cx = x - editfont.measure(token['str'][cursor:])
+							cy = y
+							canvas.create_rectangle((cx, cy), cx+2, cy + editfont.metrics()['linespace'], fill="black")
+							cursor = -1
+						else:
+							cursor -= len(token['str'])
+			if cursor != -1:
+				canvas.create_rectangle((x, y), x+2, y + editfont.metrics()['linespace'], fill="black")
+		else:
+			code = False
+			linespace = 0
+
+			for token in tokens:
+				if token['type'] == 'code':
+					code = not code
+				elif token['type'] == 'newline':
+					x = xArg
+					y += linespace
+				else:
+					if code:
+						font = codefont
+					else:
+						font = stdfont
+					canvas.create_text((x, y), text=token['str'], font=font, anchor="nw")
+					x += font.measure(token['str'])
+					linespace = max(linespace, font.metrics()['linespace'])
+
+	def isEdited(self):
+		global status
+		return (status['type'] == 'edit') and (status['object'] == self)
+
+	def getX(self):
+		return self.__x
+
+	def getY(self):
+		return self.__y
+
+	def getText(self):
+		return self.__text
+
+	def _setX(self, x):
+		self.__x = x
+
+	def _setY(self, y):
+		self.__y = y
+
+	def setText(self, text):
+		self.__text = text
+
+	# sub:
+	#  getColor()
+	#  click()
+	#  rightClick()
+	#  drag(to)
+	#  drop()
+	#  getType()

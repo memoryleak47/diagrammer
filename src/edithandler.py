@@ -1,51 +1,23 @@
 #!/usr/bin/python3
 
 def editNode(node):
-	global nodes, editdata
-	editdata['object'] = node
-	editdata['text'] = node['head']
-	repositionConnections(node)
+	global nodes, status
+	status = {'type': 'edit', 'object': node, 'text': node.getText(), 'cursor': 0}
+	node.updateConnections()
 
-def editNodeBody(node):
-	global nodes, editdata
-	editdata['object'] = getNodeBody(node)
-	editdata['text'] = node['body']
+def editNodeBody(body):
+	global nodes, status
+	status = {'type': 'edit', 'object': body, 'text': body.getText(), 'cursor': 0}
 
 def editConnection(connection):
-	global nodes, editdata
-	editdata['object'] = connection
-	editdata['text'] = connection['body']
-	connection['status'] = 'open'
-	repositionConnection(connection)
-
-def resetEditdata():
-	global editdata
-
-	obj = None
-	if editdata != None:
-		obj = editdata['object']
-
-	editdata = {'text': None, 'object': None, 'cursor': 0}
-
-	if obj != None:
-		if obj['type'] == 'node':
-			repositionConnections(obj)
-		elif obj['type'] == 'connection':
-			repositionConnection(obj)
-
-def setEditText(text):
-	global editdata
-
-	editdata['text'] = text
-	if editdata['object']['type'] == 'node':
-		repositionConnections(editdata['object'])
-	elif editdata['object']['type'] == 'connection':
-		repositionConnection(editdata['object'])
+	global nodes, status
+	status = {'type': 'edit', 'object': connection, 'text': connection.getText(), 'cursor': 0}
+	connection.update()
 
 def incCursor():
-	global editdata
-	editdata['cursor'] = min(editdata['cursor']+1, len(editdata['text']))
+	global status
+	status['cursor'] = min(status['cursor']+1, len(status['text']))
 
 def decCursor():
-	global editdata
-	editdata['cursor'] = max(0, editdata['cursor']-1)
+	global status
+	status['cursor'] = max(0, status['cursor']-1)

@@ -17,7 +17,7 @@ def loadFile(filename):
 			tokens.append("node")
 			i = 5
 		elif line.startswith("connection "):
-			tokens.append("connection")
+			kens.append("connection")
 			i = 11
 		else:
 			die("Can not tokenize: " + line)
@@ -52,20 +52,20 @@ def loadFile(filename):
 				i += 1
 
 		if tokens[0] == "node":
-			nodes.append({'status': 'closed', 'type': 'node', "head": tokens[1], "x": float(tokens[2]), "y": float(tokens[3]), "body": tokens[4]})
+			nodes.append(Node(text=tokens[1], x=float(tokens[2]), y=float(tokens[3]), bodytext=tokens[4]))
 		elif line.startswith("connection"):
 			if tokens[1] == '':
-				fromids = list()
+				srcids = list()
 			else:
-				fromids = [int(x) for x in tokens[1].split(",")]
-			connections.append({'status': 'closed', 'type': 'connection', "from": fromids, "to": int(tokens[2]), "x": float(tokens[3]), "y": float(tokens[4]), "body": tokens[5]})
+				srcids = [int(x) for x in tokens[1].split(",")]
+			connections.append(Connection(srcids=srcids, dstid=int(tokens[2]), x=float(tokens[3]), y=float(tokens[4]), text=tokens[5]))
 		else:
 			die("Could not parse line: " + line)
 
 def saveFile(filename, nodes, connections):
 	f = open(filename, "w")
 	for node in nodes:
-		f.write("node '" + node["head"].replace("\n", "\\n").replace("\t", "\\t") + "' '" + str(node['x']) + "' '" + str(node['y']) + "' '" + node['body'].replace("\n", "\\n").replace("\t", "\\t") + "'\n")
+		f.write("node '" + node.getText().replace("\n", "\\n").replace("\t", "\\t") + "' '" + str(node.getX()) + "' '" + str(node.getY()) + "' '" + node.getNodeBody().getText().replace("\n", "\\n").replace("\t", "\\t") + "'\n")
 	for connection in connections:
-		f.write("connection '" + ",".join([str(x) for x in connection["from"]]) + "' '" + str(connection['to']) + "' '" + str(connection['x']) + "' '" + str(connection['y']) + "' '" + connection['body'] + "'")
+		f.write("connection '" + ",".join([str(x) for x in connection.getSrcIds()]) + "' '" + str(connection.getDstId()) + "' '" + str(connection.getX()) + "' '" + str(connection.getY()) + "' '" + connection.getText() + "'")
 	f.close()

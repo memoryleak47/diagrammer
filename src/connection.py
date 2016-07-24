@@ -1,25 +1,82 @@
 #!/usr/bin/python3
 
-def repositionConnection(connection):
-	global nodes
-	node = nodes[connection['to']]
+class Connection(Box):
+	def __init__(self, dstid, x, y, text=""):
+		super().__init__()
+		self.__srcids = list()
+		self.__dstid = dstid
+		self._setX(x)
+		self._setY(y)
+		self.setText(text)
 
-	nodeSize = getSize(node)
-	connectionSize = getSize(connection)
-	xDiff = (connection['x'] - node['x'])/nodeSize[0]
-	yDiff = (connection['y'] - node['y'])/nodeSize[1]
+	def drop(self):
+		self.update()
 
-	if abs(xDiff) > abs(yDiff):
-		if xDiff < 0:
-			connection['x'] = node['x'] - nodeSize[0]/2 - connectionSize[0]/2
-			connection['y'] = min(node['y'] + nodeSize[1]/2 + connectionSize[1]/2, max(node['y'] - nodeSize[1]/2 - connectionSize[1]/2, connection['y']))
+	def update(self):
+		global nodes
+		node = nodes[self.__dstid]
+
+		nodeSize = node.getSize()
+		connectionSize = self.getSize()
+		xDiff = (self.getX() - node.getX())/nodeSize[0]
+		yDiff = (self.getY() - node.getY())/nodeSize[1]
+
+		if abs(xDiff) > abs(yDiff):
+			if xDiff < 0:
+				self._setX(node.getX() - nodeSize[0]/2 - connectionSize[0]/2)
+				self._setY(min(node.getY() + nodeSize[1]/2 + connectionSize[1]/2, max(node.getY() - nodeSize[1]/2 - connectionSize[1]/2, self.getY())))
+			else:
+				self._setX(node.getX() + nodeSize[0]/2 + connectionSize[0]/2)
+				self._setY(min(node.getY() + nodeSize[1]/2 + connectionSize[1]/2, max(node.getY() - nodeSize[1]/2 - connectionSize[1]/2, self.getY())))
 		else:
-			connection['x'] = node['x'] + nodeSize[0]/2 + connectionSize[0]/2
-			connection['y'] = min(node['y'] + nodeSize[1]/2 + connectionSize[1]/2, max(node['y'] - nodeSize[1]/2 - connectionSize[1]/2, connection['y']))
-	else:
-		if yDiff < 0:
-			connection['y'] = node['y'] - nodeSize[1]/2 - connectionSize[1]/2
-			connection['x'] = min(node['x'] + nodeSize[0]/2 + connectionSize[0]/2, max(node['x'] - nodeSize[0]/2 - connectionSize[0]/2, connection['x']))
-		else:
-			connection['y'] = node['y'] + nodeSize[1]/2 + connectionSize[1]/2
-			connection['x'] = min(node['x'] + nodeSize[0]/2 + connectionSize[0]/2, max(node['x'] - nodeSize[0]/2 - connectionSize[0]/2, connection['x']))
+			if yDiff < 0:
+				self._setY(node.getY() - nodeSize[1]/2 - connectionSize[1]/2)
+				self._setX(min(node.getX() + nodeSize[0]/2 + connectionSize[0]/2, max(node.getX() - nodeSize[0]/2 - connectionSize[0]/2, self.getX())))
+			else:
+				self._setY(node.getY() + nodeSize[1]/2 + connectionSize[1]/2)
+				self._setX(min(node.getX() + nodeSize[0]/2 + connectionSize[0]/2, max(node.getX() - nodeSize[0]/2 - connectionSize[0]/2, self.getX())))
+
+	def getDstId(self):
+		return self.__dstid
+
+	def getSrcIds(self):
+		return self.__srcids.copy()
+
+	def renderPaths(self):
+		global canvas, nodes
+		dstX, dstY = gameToScreenPos(self.getX(), self.getY())
+		for srcId in self.getSrcIds():
+			srcX, srcY = gameToScreenPos(nodes[srcId].getX(), nodes[srcId].getY())
+			canvas.create_line(srcX, srcY, dstX, dstY)
+
+	def getColor(self):
+		return CONNECTIONCOLOR
+
+	def click(self, x, y): pass
+
+	def rightClick(self, x, y):
+		global window, rightclickmenu
+		rightclickmenu = tkinter.Menu(window, tearoff=0)
+		rightclickmenu.add_command(label="Delete Connection", command=lambda: deleteConnection(self))
+		rightclickmenu.add_command(label="Add Source", command=lambda: chooseAddSource(self))
+		rightclickmenu.add_command(label="Remove Source", command=lambda: chooseRemoveSource(self))
+		rightclickmenu.add_command(label="Edit", command=lambda: editConnection(self))
+		rightclickmenu.post(x, y)
+
+	def drag(self, x, y):
+		self._setX(self.getX() + x)
+		self._setY(self.getY() + y)
+
+	def drop(self):
+		self.update()
+
+	def getType(self):
+		return 'connection'
+
+	def addSrc(self, src):
+		global nodes
+		self.__srcids.append(nodes.index(src))
+
+	def removeSrc(self, src):
+		global nodes
+		self.__srcids.remove(nodes.index(src))
