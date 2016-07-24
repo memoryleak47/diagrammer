@@ -34,9 +34,11 @@ def onRelease(event):
 			if status['type'].startswith("choose"):
 				if obj.getType() == 'node':
 					if status['type'] == 'choose_add':
-						status['connection'].addSrc(obj)
+						if nodes.index(obj) in status['nodeids']:
+							status['connection'].addSrc(obj)
 					elif status['type'] == 'choose_remove':
-						status['connection'].removeSrc(obj)
+						if nodes.index(obj) in status['nodeids']:
+							status['connection'].removeSrc(obj)
 					else:
 						die("wot?")
 				resetStatus()
