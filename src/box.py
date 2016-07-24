@@ -174,10 +174,10 @@ class Box:
 	def getText(self):
 		return self.__text
 
-	def _setX(self, x):
+	def setX(self, x):
 		self.__x = x
 
-	def _setY(self, y):
+	def setY(self, y):
 		self.__y = y
 
 	def setText(self, text):

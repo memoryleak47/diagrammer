@@ -5,8 +5,8 @@ class NodeBody(Box):
 		super().__init__()
 		self.__node = node
 		self.setText(text)
-		self._setX(x)
-		self._setY(y)
+		self.setX(x)
+		self.setY(y)
 
 	def getType(self):
 		return 'nodebody'
@@ -15,8 +15,8 @@ class NodeBody(Box):
 		return BODYCOLOR
 
 	def update(self):
-		self._setX(self.__node.getX())
-		self._setY(self.__node.getY() + self.__node.getSize()[1]/2 + self.getSize()[1]/2)
+		self.setX(self.__node.getX())
+		self.setY(self.__node.getY() + self.__node.getSize()[1]/2 + self.getSize()[1]/2)
 
 	def click(self, x, y): pass
 

@@ -5,15 +5,27 @@ class Node(Box):
 		super().__init__()
 		self.__body = NodeBody(node=self, x=0, y=0, text=bodytext)
 		self.setText(text)
-		self._setX(x)
-		self._setY(y)
+		self.setX(x)
+		self.setY(y)
 
-	def _setX(self, x):
-		super()._setX(x)
+	def setX(self, x):
+		global connections, nodes
+		if self in nodes:
+			moveX = x - self.getX()
+			for connection in connections:
+				if connection.getDstId() == nodes.index(self):
+					connection.setX(connection.getX() + moveX)
+		super().setX(x)
 		self.getNodeBody().update()
 
-	def _setY(self, y):
-		super()._setY(y)
+	def setY(self, y):
+		global connections, nodes
+		if self in nodes:
+			moveY = y - self.getY()
+			for connection in connections:
+				if connection.getDstId() == nodes.index(self):
+					connection.setY(connection.getY() + moveY)
+		super().setY(y)
 		self.getNodeBody().update()
 
 	def updateConnections(self):
@@ -53,7 +65,7 @@ class Node(Box):
 		return 'node'
 
 	def drag(self, x, y):
-		self._setX(self.getX() + x)
-		self._setY(self.getY() + y)
+		self.setX(self.getX() + x)
+		self.setY(self.getY() + y)
 
 	def drop(self): pass

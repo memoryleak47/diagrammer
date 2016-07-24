@@ -5,8 +5,8 @@ class Connection(Box):
 		super().__init__()
 		self.__srcids = list()
 		self.__dstid = dstid
-		self._setX(x)
-		self._setY(y)
+		self.setX(x)
+		self.setY(y)
 		self.setText(text)
 
 	def drop(self):
@@ -23,18 +23,18 @@ class Connection(Box):
 
 		if abs(xDiff) > abs(yDiff):
 			if xDiff < 0:
-				self._setX(node.getX() - nodeSize[0]/2 - connectionSize[0]/2)
-				self._setY(min(node.getY() + nodeSize[1]/2 + connectionSize[1]/2, max(node.getY() - nodeSize[1]/2 - connectionSize[1]/2, self.getY())))
+				self.setX(node.getX() - nodeSize[0]/2 - connectionSize[0]/2)
+				self.setY(min(node.getY() + nodeSize[1]/2 + connectionSize[1]/2, max(node.getY() - nodeSize[1]/2 - connectionSize[1]/2, self.getY())))
 			else:
-				self._setX(node.getX() + nodeSize[0]/2 + connectionSize[0]/2)
-				self._setY(min(node.getY() + nodeSize[1]/2 + connectionSize[1]/2, max(node.getY() - nodeSize[1]/2 - connectionSize[1]/2, self.getY())))
+				self.setX(node.getX() + nodeSize[0]/2 + connectionSize[0]/2)
+				self.setY(min(node.getY() + nodeSize[1]/2 + connectionSize[1]/2, max(node.getY() - nodeSize[1]/2 - connectionSize[1]/2, self.getY())))
 		else:
 			if yDiff < 0:
-				self._setY(node.getY() - nodeSize[1]/2 - connectionSize[1]/2)
-				self._setX(min(node.getX() + nodeSize[0]/2 + connectionSize[0]/2, max(node.getX() - nodeSize[0]/2 - connectionSize[0]/2, self.getX())))
+				self.setY(node.getY() - nodeSize[1]/2 - connectionSize[1]/2)
+				self.setX(min(node.getX() + nodeSize[0]/2 + connectionSize[0]/2, max(node.getX() - nodeSize[0]/2 - connectionSize[0]/2, self.getX())))
 			else:
-				self._setY(node.getY() + nodeSize[1]/2 + connectionSize[1]/2)
-				self._setX(min(node.getX() + nodeSize[0]/2 + connectionSize[0]/2, max(node.getX() - nodeSize[0]/2 - connectionSize[0]/2, self.getX())))
+				self.setY(node.getY() + nodeSize[1]/2 + connectionSize[1]/2)
+				self.setX(min(node.getX() + nodeSize[0]/2 + connectionSize[0]/2, max(node.getX() - nodeSize[0]/2 - connectionSize[0]/2, self.getX())))
 
 	def getDstId(self):
 		return self.__dstid
@@ -64,8 +64,8 @@ class Connection(Box):
 		rightclickmenu.post(x, y)
 
 	def drag(self, x, y):
-		self._setX(self.getX() + x)
-		self._setY(self.getY() + y)
+		self.setX(self.getX() + x)
+		self.setY(self.getY() + y)
 
 	def drop(self):
 		self.update()
