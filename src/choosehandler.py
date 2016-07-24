@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 def chooseAddSource(connection):
-	global choosedata, nodes, status
+	global nodes, status
 	nodeids = list()
 	for i in range(len(nodes)):
 		if i not in connection.getSrcIds() and i != connection.getDstId():

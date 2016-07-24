@@ -24,7 +24,7 @@ def onClick(event):
 	foldExcept(draggedObject)
 
 def onRelease(event):
-	global dragging, draggedObject, choosedata, nodes, status
+	global dragging, draggedObject, nodes, status
 	if dragging:
 		if draggedObject != None:
 			draggedObject.drop()
@@ -91,7 +91,7 @@ def handleKeyPress(arg):
 
 	if arg == "Tab":
 		cursor = status['cursor']
-		status['text'] = status['text'][:cursor] + "    " + status['text'][cursor:]
+		setEditText(status['text'][:cursor] + "    " + status['text'][cursor:])
 		status['cursor'] += 4
 	elif arg == "Right":
 		incCursor()
@@ -118,19 +118,19 @@ def handleKeyPress(arg):
 	elif arg == "RemoveLeft":
 		cursor = status['cursor']
 		if cursor != 0:
-			status['text'] = status['text'][:cursor-1] + status['text'][cursor:]
+			setEditText(status['text'][:cursor-1] + status['text'][cursor:])
 			decCursor()
 	elif arg == "RemoveRight":
 		cursor = status['cursor']
 		if cursor < len(status['text']):
-			status['text'] = status['text'][:cursor] + status['text'][cursor+1:]
+			setEditText(status['text'][:cursor] + status['text'][cursor+1:])
 	elif arg == "Return":
 		cursor = status['cursor']
-		status['text'] = status['text'][:cursor] + '\n' + status['text'][cursor:]
+		setEditText(status['text'][:cursor] + '\n' + status['text'][cursor:])
 		incCursor()
 	elif arg != '' and arg in (string.printable + "ßöäüÄÖÜ\\"):
 		cursor = status['cursor']
-		status['text'] = status['text'][:cursor] + arg + status['text'][cursor:]
+		setEditText(status['text'][:cursor] + arg + status['text'][cursor:])
 		incCursor()
 
 def onKeyPress(event):

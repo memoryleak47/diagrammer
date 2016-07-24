@@ -1,5 +1,12 @@
 #!/usr/bin/python3
 
+def setEditText(text):
+	global status
+	status['text'] = text
+
+	if status['object'].getType() == 'node':
+		status['object'].updateConnections()
+
 def editNode(node):
 	global nodes, status
 	status = {'type': 'edit', 'object': node, 'text': node.getText(), 'cursor': 0}
