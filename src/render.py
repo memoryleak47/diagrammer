@@ -116,6 +116,7 @@ def renderNode(node):
 
 def render():
 	global canvas, nodes, connections, editdata
+
 	canvas.delete("all")
 	canvas.create_rectangle(0, 0, 800, 600, fill=BACKGROUNDCOLOR)
 	for connection in reversed(connections):

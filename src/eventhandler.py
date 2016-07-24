@@ -11,10 +11,9 @@ def foldExcept(obj):
 
 def onClick(event):
 	global mouseXLeft, mouseYLeft, draggedObject, nodes, connections, editdata
-	destroyPopup()
-	d = event.__dict__
-	mouseXLeft = d['x_root']
-	mouseYLeft = d['y_root']
+	destroyRightClickMenu()
+	mouseXLeft = event.x_root
+	mouseYLeft = event.y_root
 	draggedObject = getObjectAtMouse()
 
 	if draggedObject != None and draggedObject['type'] == 'nodebody':
@@ -57,51 +56,31 @@ def onDrop(thingy):
 
 def onDrag(event):
 	global dragging, mouseXLeft, mouseYLeft, draggedObject, saved, nodes
-	d = event.__dict__
 	if draggedObject != None:
-		move(draggedObject, (d['x_root'] - mouseXLeft, d['y_root'] - mouseYLeft))
+		move(draggedObject, (event.x_root - mouseXLeft, event.y_root - mouseYLeft))
 		setSaved(False)
-	mouseXLeft = d['x_root']
-	mouseYLeft = d['y_root']
+	mouseXLeft = event.x_root
+	mouseYLeft = event.y_root
 	dragging = True
 	updateMouse(event)
 
 def onRightClick(event):
 	global mouseXRight, mouseYRight
-	d = event.__dict__
-	mouseXRight = d['x_root']
-	mouseYRight = d['y_root']
+	mouseXRight = event.x_root
+	mouseYRight = event.y_root
 
 def onRightRelease(event):
-	global dragging, window, cursorX, cursorY, popupmenu
-	destroyPopup()
+	global dragging, window, cursorX, cursorY
+	destroyRightClickMenu()
 	if dragging == False:
-		obj = getObjectAtMouse()
-		popupmenu = tkinter.Menu(window, tearoff=0)
-		if obj == None:
-			popupmenu.add_command(label="Create Node", command=lambda: createNode(cursorX, cursorY))
-		elif obj["type"] == "node":
-			popupmenu.add_command(label="Delete Node", command=lambda: deleteNode(obj))
-			popupmenu.add_command(label="Edit", command=lambda: editNode(obj))
-			popupmenu.add_command(label="Add Connection", command=lambda: createConnection(obj))
-		elif obj["type"] == "connection":
-			popupmenu.add_command(label="Delete Connection", command=lambda: deleteConnection(obj))
-			popupmenu.add_command(label="Add Source", command=lambda: chooseAddSource(obj))
-			popupmenu.add_command(label="Remove Source", command=lambda: chooseRemoveSource(obj))
-			popupmenu.add_command(label="Edit", command=lambda: editConnection(obj))
-		elif obj['type'] == 'nodebody':
-			popupmenu.add_command(label="Edit", command=lambda: editNodeBody(obj['node']))
-		else:
-			die("wot?")
-		popupmenu.post(event.x_root, event.y_root)
+		openRightClickMenu((event.x_root, event.y_root))
 	dragging = False
 
 def onRightDrag(event):
 	global focus, mouseXRight, mouseYRight, dragging
-	d = event.__dict__
 	focus = (focus[0] + mouseXRight - d['x_root'], focus[1] + mouseYRight - d['y_root'])
-	mouseXRight = d['x_root']
-	mouseYRight = d['y_root']
+	mouseXRight = event.x_root
+	mouseYRight = event.y_root
 	dragging = True
 	updateMouse(event)
 

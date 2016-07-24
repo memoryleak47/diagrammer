@@ -25,10 +25,3 @@ def menu_saveFileAs():
 def menu_close():
 	if reallyDiscardContent():
 		sys.exit()
-
-def destroyPopup():
-	global popupmenu
-	if popupmenu != None:
-		popupmenu.destroy()
-		popupmenu = None
-

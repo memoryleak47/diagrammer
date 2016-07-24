@@ -13,11 +13,12 @@ def restart(filename=None):
 		nodes = list()
 		connections = list()
 	setSaved(True)
+	render()
 
 def main():
-	global canvas, cursorX, cursorY, window, popupmenu, stdfont, codefont, editfont, editdata
+	global canvas, cursorX, cursorY, window, rightclickmenu, stdfont, codefont, editfont, editdata
 
-	popupmenu = None
+	rightclickmenu = None
 	editdata = None
 	cursorX = 0
 	cursorY = 0
@@ -79,5 +80,5 @@ def main():
 def tick():
 	global window
 
-	window.after(80, tick) # 40 is weirdish
+	window.after(80, tick)
 	render()
