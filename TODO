@@ -1,0 +1,6 @@
+# TODO
+
+heavy input lag
+Press Return (in editfield) sometimes and it just stops
+rightclick node > edit | add Connection; leftclick -> weird
+n = node + connection with text + body with text: open connection; open nodebody; close nodebody -> weird
