@@ -7,6 +7,7 @@ class NodeBody(Box):
 		self.setText(text)
 		self.setX(x)
 		self.setY(y)
+		self.updateSize()
 
 	def getType(self):
 		return 'nodebody'
@@ -18,7 +19,7 @@ class NodeBody(Box):
 		return self.__node.getX()
 
 	def getY(self):
-		return self.__node.getY() + self.__node.getSize()[1]/2 + self.getSize()[1]/2
+		return self.__node.getY() + self.__node.getSizeY()/2 + self.getSizeY()/2
 
 	def click(self, x, y): pass
 

@@ -18,7 +18,7 @@ def main():
 	global canvas, cursorX, cursorY, window, rightclickmenu, stdfont, codefont, editfont, status
 
 	rightclickmenu = None
-	status = None
+	status = {'type': 'none'}
 	cursorX = 0
 	cursorY = 0
 

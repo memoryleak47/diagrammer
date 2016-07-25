@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 
-
 def nodeBodyVisible():
 	global status
 	return (status['type'] == 'edit' or status['type'] == 'open') and status['object'].getType() == 'nodebody'
@@ -10,22 +9,33 @@ def getVisibleNodeBody():
 		return status['object']
 	die("getVisibleNodeBody(): no nodebody visible")
 
-def resetStatus():
+def setStatus(new):
 	global status
-	status = {'type': 'none'}
+	if 'object' in status:
+		obj = status['object']
+		status = new
+		obj.updateSize()
+	else:
+		status = new
+	if 'object' in status:
+		status['object'].updateSize()
+
+def resetStatus():
+	setStatus({'type': 'none'})
 
 def statusOpen(obj):
-	global status
-	status = {'type': 'open', 'object': obj}
+	setStatus({'type': 'open', 'object': obj})
 
 def statusEdit(obj):
+	setStatus({'type': 'edit', 'object': obj, 'text': obj.getText(), 'cursor': 0})
+
+def setEditText(txt):
 	global status
-	status = {'type': 'edit', 'object': obj, 'text': obj.getText(), 'cursor': 0}
+	status['text'] = txt
+	setStatus(status)
 
 def statusChooseAdd(connection, nodeids):
-	global status
-	status = {'type': 'choose_add', 'connection': connection, 'nodeids': nodeids}
+	setStatus({'type': 'choose_add', 'connection': connection, 'nodeids': nodeids})
 
 def statusChooseRemove(connection, nodeids):
-	global status
-	status = {'type': 'choose_remove', 'connection': connection, 'nodeids': nodeids}
+	setStatus({'type': 'choose_remove', 'connection': connection, 'nodeids': nodeids})

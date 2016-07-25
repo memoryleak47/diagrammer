@@ -7,6 +7,7 @@ class Node(Box):
 		self.setText(text)
 		self.setX(x)
 		self.setY(y)
+		self.updateSize()
 
 	def getColor(self):
 		global status, nodes
@@ -30,6 +31,23 @@ class Node(Box):
 		rightclickmenu.add_command(label="Edit", command=lambda: editNode(obj))
 		rightclickmenu.add_command(label="Add Connection", command=lambda: createConnection(obj))
 		rightclickmenu.post(x, y)
+
+	def __updateConnections(self):
+		global connections, nodes
+		if self not in nodes:
+			return
+
+		for connection in connections:
+			if connection.getDstId() == nodes.index(self):
+				connection.update()
+
+	def setSizeX(self, sx):
+		super().setSizeX(sx)
+		self.__updateConnections()
+
+	def setSizeY(self, sy):
+		super().setSizeY(sy)
+		self.__updateConnections()
 
 	def getNodeBody(self):
 		return self.__body

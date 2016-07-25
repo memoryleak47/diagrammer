@@ -4,10 +4,10 @@ def getObjectAtMouse():
 	global canvas, focus, cursorX, cursorY, nodes, connections
 	l = nodes + connections
 	if nodeBodyVisible():
-		l.append(getVisibleNodeBody())
+		l.insert(0, getVisibleNodeBody())
 
 	for thingy in l:
-		sizeX, sizeY = thingy.getSize()
+		sizeX, sizeY = thingy.getSizeX(), thingy.getSizeY()
 		if thingy.getX() - sizeX/2 < cursorX and thingy.getX() + sizeX/2 > cursorX and thingy.getY() - sizeY/2 < cursorY and thingy.getY() + sizeY/2 > cursorY:
 			return thingy
 	return None

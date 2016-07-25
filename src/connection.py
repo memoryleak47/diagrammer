@@ -12,7 +12,8 @@ class Connection(Box):
 		self.setX(x)
 		self.setY(y)
 		self.setText(text)
-		self.__update()
+		self.updateSize()
+		self.update()
 
 	def getDstNode(self):
 		global nodes
@@ -30,12 +31,12 @@ class Connection(Box):
 	def setY(self, y):
 		super().setY(y - self.getDstNode().getY())
 
-	def __update(self):
+	def update(self):
 		global nodes
 		node = nodes[self.__dstid]
 
-		nodeSize = node.getSize()
-		connectionSize = self.getSize()
+		nodeSize = node.getSizeX(), node.getSizeY()
+		connectionSize = self.getSizeX(), self.getSizeY()
 		xDiff = (self.getX() - node.getX())/nodeSize[0]
 		yDiff = (self.getY() - node.getY())/nodeSize[1]
 
@@ -99,12 +100,20 @@ class Connection(Box):
 		rightclickmenu.add_command(label="Edit", command=lambda: editConnection(self))
 		rightclickmenu.post(x, y)
 
+	def setSizeX(self, sx):
+		super().setSizeX(sx)
+		self.update()
+
+	def setSizeY(self, sy):
+		super().setSizeY(sy)
+		self.update()
+
 	def drag(self, x, y):
 		self.setX(self.getX() + x)
 		self.setY(self.getY() + y)
 
 	def drop(self):
-		self.__update()
+		self.update()
 
 	def getType(self):
 		return 'connection'

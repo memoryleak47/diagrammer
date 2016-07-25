@@ -5,11 +5,14 @@ class Box:
 		self.__x = 0
 		self.__y = 0
 		self.__text = ""
+		self.__sizeX = 0
+		self.__sizeY = 0
 
 	def getPadding(self):
 		return PADDING, PADDING
 
 	def __tokenize(self):
+		global status
 		if self.isEdited():
 			text = status['text']
 			tokens = list()
@@ -62,7 +65,7 @@ class Box:
 				tokens.append({'type': 'normal', 'str': tmp})
 			return tokens
 
-	def getTextSize(self):
+	def updateSize(self):
 		global status
 		tokens = self.__tokenize()
 
@@ -75,7 +78,6 @@ class Box:
 				elif token['type'] == "normal":
 					x = max(x, editfont.measure(token['str']))
 			y += editfont.metrics()['linespace']
-			return x, y
 		else:
 			x, y = 0, 0
 
@@ -100,17 +102,26 @@ class Box:
 					linespace = max(linespace, font.metrics()['linespace'])
 			y += linespace
 			x = max(x, tmpX)
-			return x, y
+		self.setSizeX(x + self.getPadding()[0]*2)
+		self.setSizeY(y + self.getPadding()[1]*2)
 
-	def getSize(self):
-		_ = self.getTextSize()
-		return _[0] + 2*self.getPadding()[0], _[1] + 2*self.getPadding()[1]
+	def setSizeX(self, sx):
+		self.__sizeX = sx
+
+	def setSizeY(self, sy):
+		self.__sizeY = sy
+
+	def getSizeX(self):
+		return self.__sizeX
+
+	def getSizeY(self):
+		return self.__sizeY
 
 	def render(self):
 		global canvas
 		tokens = self.__tokenize()
-		size = self.getTextSize()
 		padding = self.getPadding()
+		size = self.getSizeX() - padding[0]*2, self.getSizeY() - padding[1]*2
 
 		xArg, yArg = gameToScreenPos(self.getX() - size[0]/2, self.getY() - size[1]/2)
 
@@ -182,6 +193,7 @@ class Box:
 
 	def setText(self, text):
 		self.__text = text
+		self.updateSize()
 
 	# sub:
 	#  getColor()
