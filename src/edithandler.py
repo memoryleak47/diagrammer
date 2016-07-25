@@ -6,15 +6,15 @@ def setEditText(text):
 
 def editNode(node):
 	global nodes, status
-	status = {'type': 'edit', 'object': node, 'text': node.getText(), 'cursor': 0}
+	statusEdit(node)
 
 def editNodeBody(body):
 	global nodes, status
-	status = {'type': 'edit', 'object': body, 'text': body.getText(), 'cursor': 0}
+	statusEdit(body)
 
 def editConnection(connection):
 	global nodes, status
-	status = {'type': 'edit', 'object': connection, 'text': connection.getText(), 'cursor': 0}
+	statusEdit(connection)
 
 def incCursor():
 	global status

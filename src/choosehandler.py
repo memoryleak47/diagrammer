@@ -6,7 +6,7 @@ def chooseAddSource(connection):
 	for i in range(len(nodes)):
 		if i not in connection.getSrcIds() and i != connection.getDstId():
 			nodeids.append(i)
-	status = {'type': 'choose_add', 'connection': connection, 'nodeids': nodeids, 'connection': connection}
+	statusChooseAdd(connection, nodeids)
 	
 def chooseRemoveSource(connection):
 	global status
@@ -14,4 +14,4 @@ def chooseRemoveSource(connection):
 	for i in range(len(nodes)):
 		if i in connection.getSrcIds() and i != connection.getDstId():
 			nodeids.append(i)
-	status = {'type': 'choose_remove', 'connection': connection, 'nodeids': nodeids, 'connection': connection}
+	statusChooseRemove(connection, nodeids)

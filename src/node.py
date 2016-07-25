@@ -20,7 +20,7 @@ class Node(Box):
 		if nodeBodyVisible() and status['object'] == self.getNodeBody():
 			resetStatus()
 		else:
-			status = {'type': 'open', 'object': self.getNodeBody()}
+			statusOpen(self.getNodeBody())
 
 	def rightClick(self, x, y):
 		global window, rightclickmenu

@@ -106,7 +106,7 @@ def handleKeyPress(arg):
 			if obj.getType() == 'node':
 				resetStatus()
 			else:
-				status = {'type': 'open', 'object': obj}
+				statusOpen(obj)
 			setSaved(False)
 	elif arg == "Escape":
 		resetStatus()

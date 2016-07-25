@@ -7,5 +7,3 @@ MousePosition wrong if hovered over rightclickmenu:
 	rightclick node > edit | add Connection; leftclick -> weird
 
 Connection position not updated if size changes (eg. editing)
-
-Can not close connection

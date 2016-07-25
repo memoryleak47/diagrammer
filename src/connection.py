@@ -68,9 +68,27 @@ class Connection(Box):
 			canvas.create_line(srcX, srcY, dstX, dstY)
 
 	def getColor(self):
-		return CONNECTIONCOLOR
+		if super().getText() == "":
+			return EMPTYCONNECTIONCOLOR
+		else:
+			return CONNECTIONCOLOR
 
-	def click(self, x, y): pass
+	def isOpen(self):
+		global status
+		return (status['type'] == 'open' or status['type'] == 'edit') and status['object'] == self
+
+	def click(self, x, y):
+		if not self.isEdited():
+			if self.isOpen():
+				resetStatus()
+			else:
+				statusOpen(self)
+
+	def getText(self):
+		if self.isOpen():
+			return super().getText()
+		else:
+			return ""
 
 	def rightClick(self, x, y):
 		global window, rightclickmenu
