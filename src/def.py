@@ -25,6 +25,6 @@ class Connection(Box):
 """
 
 # global status = {'type': 'edit', 'object': Box, 'text': str}
-# or {'type': 'opened', 'object': NodeBody/Connection)
+# or {'type': 'open', 'object': NodeBody/Connection)
 # or {'type': 'choose', 'highlight': list()} # missing data on what todo if chosen?
 # or {'type': 'none'}

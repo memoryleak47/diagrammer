@@ -102,15 +102,11 @@ def handleKeyPress(arg):
 	elif arg == "Ctrl+Return":
 		obj = status['object']
 		if obj != None:
+			obj.setText(status['text'])
 			if obj.getType() == 'node':
-				obj.setText(status['text'])
-			elif obj.getType() == 'nodebody':
-				obj.setText(status['text'])
-			elif obj.getType() == 'connection':
-				obj.setText(status['text'])
+				resetStatus()
 			else:
-				die("onKeyPress(): Ctrl+Return: status['object']['type'] is unknown")
-			status = {'type': 'open', 'object': obj}
+				status = {'type': 'open', 'object': obj}
 			setSaved(False)
 	elif arg == "Escape":
 		resetStatus()
