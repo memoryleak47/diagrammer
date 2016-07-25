@@ -9,5 +9,3 @@ MousePosition wrong if hovered over rightclickmenu:
 Connection position not updated if size changes (eg. editing)
 
 Can not close connection
-
-Control+Return should go to open mode
