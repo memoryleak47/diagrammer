@@ -88,7 +88,7 @@ def onRightDrag(event):
 def handleKeyPress(arg):
 	global status, cursor
 
-	if status['text'] == None:
+	if "text" not in status.keys():
 		return
 
 	if arg == "Tab":
