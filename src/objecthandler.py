@@ -39,7 +39,6 @@ def createConnection(obj):
 	global connections, nodes
 	# obj == dst-node
 	connection = Connection(dstid=nodes.index(obj), x=obj.getX(), y=obj.getY())
-	connection.update()
 	connections.append(connection)
 	setSaved(False)
 

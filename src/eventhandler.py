@@ -105,7 +105,6 @@ def handleKeyPress(arg):
 			if obj.getType() == 'node':
 				obj.setText(status['text'])
 				resetStatus()
-				obj.updateConnections()
 			elif obj.getType() == 'nodebody':
 				obj.setText(status['text'])
 				resetStatus()

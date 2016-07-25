@@ -4,13 +4,9 @@ def setEditText(text):
 	global status
 	status['text'] = text
 
-	if status['object'].getType() == 'node':
-		status['object'].updateConnections()
-
 def editNode(node):
 	global nodes, status
 	status = {'type': 'edit', 'object': node, 'text': node.getText(), 'cursor': 0}
-	node.updateConnections()
 
 def editNodeBody(body):
 	global nodes, status
@@ -19,7 +15,6 @@ def editNodeBody(body):
 def editConnection(connection):
 	global nodes, status
 	status = {'type': 'edit', 'object': connection, 'text': connection.getText(), 'cursor': 0}
-	connection.update()
 
 def incCursor():
 	global status

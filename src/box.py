@@ -7,7 +7,7 @@ class Box:
 		self.__text = ""
 
 	def getPadding(self):
-		return 6, 6
+		return PADDING, PADDING
 
 	def __tokenize(self):
 		if self.isEdited():

@@ -1,5 +1,9 @@
 #!/usr/bin/python3
 
+# __x, __y = relative position
+# getX(), getY() = absolute position
+# setX(), setY() = set absolute position
+
 class Connection(Box):
 	def __init__(self, dstid, x, y, text=""):
 		super().__init__()
@@ -8,11 +12,25 @@ class Connection(Box):
 		self.setX(x)
 		self.setY(y)
 		self.setText(text)
+		self.__update()
 
-	def drop(self):
-		self.update()
+	def getDstNode(self):
+		global nodes
+		return nodes[self.__dstid]
 
-	def update(self):
+	def getX(self):
+		return super().getX() + self.getDstNode().getX()
+
+	def getY(self):
+		return super().getY() + self.getDstNode().getY()
+
+	def setX(self, x):
+		super().setX(x - self.getDstNode().getX())
+
+	def setY(self, y):
+		super().setY(y - self.getDstNode().getY())
+
+	def __update(self):
 		global nodes
 		node = nodes[self.__dstid]
 
@@ -68,7 +86,7 @@ class Connection(Box):
 		self.setY(self.getY() + y)
 
 	def drop(self):
-		self.update()
+		self.__update()
 
 	def getType(self):
 		return 'connection'

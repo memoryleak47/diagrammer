@@ -14,9 +14,11 @@ class NodeBody(Box):
 	def getColor(self):
 		return BODYCOLOR
 
-	def update(self):
-		self.setX(self.__node.getX())
-		self.setY(self.__node.getY() + self.__node.getSize()[1]/2 + self.getSize()[1]/2)
+	def getX(self):
+		return self.__node.getX()
+
+	def getY(self):
+		return self.__node.getY() + self.__node.getSize()[1]/2 + self.getSize()[1]/2
 
 	def click(self, x, y): pass
 

@@ -8,33 +8,6 @@ class Node(Box):
 		self.setX(x)
 		self.setY(y)
 
-	def setX(self, x):
-		global connections, nodes
-		if self in nodes:
-			moveX = x - self.getX()
-			for connection in connections:
-				if connection.getDstId() == nodes.index(self):
-					connection.setX(connection.getX() + moveX)
-		super().setX(x)
-		self.getNodeBody().update()
-
-	def setY(self, y):
-		global connections, nodes
-		if self in nodes:
-			moveY = y - self.getY()
-			for connection in connections:
-				if connection.getDstId() == nodes.index(self):
-					connection.setY(connection.getY() + moveY)
-		super().setY(y)
-		self.getNodeBody().update()
-
-	def updateConnections(self):
-		global connections, nodes
-
-		for connection in connections:
-			if connection.getDstId() == nodes.index(self):
-				connection.update()
-
 	def getColor(self):
 		global status, nodes
 		if status['type'].startswith('choose') and nodes.index(self) in status['nodeids']:
