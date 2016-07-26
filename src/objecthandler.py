@@ -16,6 +16,7 @@ def createNode(x, y):
 	global nodes
 	nodes.append(Node(text='', x=x, y=y, bodytext=''))
 	setSaved(False)
+	render()
 
 def deleteNode(node):
 	global nodes, connections, status
@@ -41,6 +42,7 @@ def deleteNode(node):
 		resetStatus()
 	nodes.remove(node)
 	setSaved(False)
+	render()
 
 def createConnection(obj):
 	global connections, nodes
@@ -48,8 +50,10 @@ def createConnection(obj):
 	connection = Connection(dstid=nodes.index(obj), x=obj.getX(), y=obj.getY())
 	connections.append(connection)
 	setSaved(False)
+	render()
 
 def deleteConnection(connection):
 	global connections
 	connections.remove(connection)
 	setSaved(False)
+	render()

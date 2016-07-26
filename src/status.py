@@ -19,6 +19,7 @@ def setStatus(new):
 		status = new
 	if 'object' in status:
 		status['object'].updateSize()
+	render()
 
 def resetStatus():
 	setStatus({'type': 'none'})

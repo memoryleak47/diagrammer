@@ -3,6 +3,7 @@
 def setEditText(text):
 	global status
 	status['text'] = text
+	setStatus(status)
 
 def editNode(node):
 	global nodes, status
@@ -20,7 +21,9 @@ def editConnection(connection):
 def incCursor():
 	global status
 	status['cursor'] = min(status['cursor']+1, len(status['text']))
+	setStatus(status)
 
 def decCursor():
 	global status
 	status['cursor'] = max(0, status['cursor']-1)
+	setStatus(status)

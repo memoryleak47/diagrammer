@@ -1,16 +1,5 @@
 #!/usr/bin/python3
 
-def foldExcept(obj):
-	global nodes, connections, status
-
-	"""
-	for thingy in nodes + connections:
-		if obj != thingy:
-			thingy['status'] = 'closed'
-	if status['object'] != obj:
-		resetStatus()
-	"""
-
 def onClick(event):
 	global mouseXLeft, mouseYLeft, draggedObject, nodes, connections
 	destroyRightClickMenu()
@@ -21,7 +10,7 @@ def onClick(event):
 	if draggedObject != None and draggedObject.getType() == 'nodebody':
 		draggedObject = None
 
-	foldExcept(draggedObject)
+	render()
 
 def onRelease(event):
 	global dragging, draggedObject, nodes, status
@@ -46,6 +35,7 @@ def onRelease(event):
 				obj.click(event.x_root, event.y_root)
 	draggedObject = None
 	dragging = False
+	render()
 
 def onDrag(event):
 	global dragging, mouseXLeft, mouseYLeft, draggedObject, saved, nodes
@@ -56,11 +46,13 @@ def onDrag(event):
 	mouseYLeft = event.y_root
 	dragging = True
 	updateMouse(event)
+	render()
 
 def onRightClick(event):
 	global mouseXRight, mouseYRight, dragging
 	mouseXRight = event.x_root
 	mouseYRight = event.y_root
+	render()
 
 def onRightRelease(event):
 	global dragging, window, cursorX, cursorY, rightclickmenu
@@ -75,6 +67,7 @@ def onRightRelease(event):
 			rightclickmenu = tkinter.Menu(window, tearoff=0)
 			rightclickmenu.add_command(label="Create Node", command=lambda: createNode(cursorX, cursorY))
 			rightclickmenu.post(event.x_root, event.y_root)
+	render()
 
 def onRightDrag(event):
 	global focus, mouseXRight, mouseYRight, dragging
@@ -83,6 +76,7 @@ def onRightDrag(event):
 	mouseYRight = event.y_root
 	dragging = True
 	updateMouse(event)
+	render()
 
 def handleKeyPress(arg):
 	global status, cursor
@@ -126,6 +120,7 @@ def handleKeyPress(arg):
 		cursor = status['cursor']
 		setEditText(status['text'][:cursor] + arg + status['text'][cursor:])
 		incCursor()
+	render()
 
 def onKeyPress(event):
 	if event.keysym == 'backslash':

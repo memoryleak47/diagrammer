@@ -1,7 +1,6 @@
 # TODO
 
-Too many Newlines in editfield crashes stuff:
-	Press Return (in editfield) sometimes and it just stops
+ENTERRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR -> slow:
 
 MousePosition wrong if hovered over rightclickmenu:
 	rightclick node > edit | add Connection; leftclick -> weird

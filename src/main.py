@@ -2,7 +2,7 @@
 
 def restart(filename=None):
 	global openfilename, dragging, nodes, connections, focus, saved
-	resetStatus()
+	status = {'type': 'none'}
 	openfilename = filename
 	dragging = False
 	focus = (0, 0) # what coordinates are centered
@@ -73,11 +73,5 @@ def main():
 	else:
 		die(usage)
 
-	tick()
 	window.mainloop()
 
-def tick():
-	global window
-
-	window.after(80, tick)
-	render()
