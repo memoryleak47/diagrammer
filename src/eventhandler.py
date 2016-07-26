@@ -58,14 +58,16 @@ def onDrag(event):
 	updateMouse(event)
 
 def onRightClick(event):
-	global mouseXRight, mouseYRight
+	global mouseXRight, mouseYRight, dragging
 	mouseXRight = event.x_root
 	mouseYRight = event.y_root
 
 def onRightRelease(event):
 	global dragging, window, cursorX, cursorY, rightclickmenu
 	destroyRightClickMenu()
-	if dragging == False:
+	if dragging:
+		dragging = False
+	else:
 		obj = getObjectAtMouse()
 		if obj != None:
 			obj.rightClick(event.x_root, event.y_root)
@@ -73,16 +75,13 @@ def onRightRelease(event):
 			rightclickmenu = tkinter.Menu(window, tearoff=0)
 			rightclickmenu.add_command(label="Create Node", command=lambda: createNode(cursorX, cursorY))
 			rightclickmenu.post(event.x_root, event.y_root)
-	dragging = False
 
 def onRightDrag(event):
 	global focus, mouseXRight, mouseYRight, dragging
-	"""
-	focus = (focus[0] + mouseXRight - d['x_root'], focus[1] + mouseYRight - d['y_root'])
+	focus = (focus[0] + mouseXRight - event.x_root, focus[1] + mouseYRight - event.y_root)
 	mouseXRight = event.x_root
 	mouseYRight = event.y_root
 	dragging = True
-	"""
 	updateMouse(event)
 
 def handleKeyPress(arg):
