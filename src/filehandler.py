@@ -17,7 +17,7 @@ def loadFile(filename):
 			tokens.append("node")
 			i = 5
 		elif line.startswith("connection "):
-			kens.append("connection")
+			tokens.append("connection")
 			i = 11
 		else:
 			die("Can not tokenize: " + line)
