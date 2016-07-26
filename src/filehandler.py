@@ -1,9 +1,14 @@
 #!/usr/bin/python3
 
+import os
+
 def loadFile(filename):
 	global nodes, connections
 	nodes = list()
 	connections = list()
+
+	if not os.path.isfile(filename):
+		return
 
 	f = open(filename)
 	lines = f.readlines()
