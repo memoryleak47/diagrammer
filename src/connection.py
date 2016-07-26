@@ -59,7 +59,7 @@ class Connection(Box):
 		return self.__dstid
 
 	def getSrcIds(self):
-		return self.__srcids.copy()
+		return self.__srcids
 
 	def renderPaths(self):
 		global canvas, nodes

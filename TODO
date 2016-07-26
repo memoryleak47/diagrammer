@@ -5,5 +5,3 @@ Too many Newlines in editfield crashes stuff:
 
 MousePosition wrong if hovered over rightclickmenu:
 	rightclick node > edit | add Connection; leftclick -> weird
-
-Connection position not updated if node/connection-size changes (eg. editing)
