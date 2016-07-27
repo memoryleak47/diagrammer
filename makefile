@@ -5,4 +5,6 @@ build:
 	@echo "if __name__ == \"__main__\": main()" >> diagrammer
 run:
 	@./diagrammer file.dia
-.PHONY: default build run
+update:
+	@gksudo cp diagrammer /usr/bin/diagrammer
+.PHONY: default build run update

@@ -47,7 +47,7 @@ def deleteNode(node):
 def createConnection(obj):
 	global connections, nodes
 	# obj == dst-node
-	connection = Connection(dstid=nodes.index(obj), x=obj.getX(), y=obj.getY())
+	connection = Connection(dstid=nodes.index(obj), x=obj.getX(), y=obj.getY(), srcids=list())
 	connections.append(connection)
 	setSaved(False)
 	render()

@@ -5,7 +5,7 @@
 # setX(), setY() = set absolute position
 
 class Connection(Box):
-	def __init__(self, dstid, x, y, srcids=list(), text=""):
+	def __init__(self, dstid, x, y, srcids, text=""):
 		super().__init__()
 		self.__srcids = srcids
 		self.__dstid = dstid
