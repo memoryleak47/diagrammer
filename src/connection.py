@@ -31,6 +31,9 @@ class Connection(Box):
 	def setY(self, y):
 		super().setY(y - self.getDstNode().getY())
 
+	def getColor(self):
+		return CONNECTIONCOLOR
+
 	def update(self):
 		global nodes
 		node = nodes[self.__dstid]
@@ -68,12 +71,6 @@ class Connection(Box):
 			srcX, srcY = gameToScreenPos(nodes[srcId].getX(), nodes[srcId].getY())
 			canvas.create_line(srcX, srcY, dstX, dstY)
 
-	def getColor(self):
-		if super().getText() == "":
-			return EMPTYCONNECTIONCOLOR
-		else:
-			return CONNECTIONCOLOR
-
 	def isOpen(self):
 		global status
 		return (status['type'] == 'open' or status['type'] == 'edit') and status['object'] == self
@@ -87,7 +84,7 @@ class Connection(Box):
 
 	def getText(self):
 		if self.isOpen():
-			return super().getText()
+			return self.getContent()
 		else:
 			return ""
 
@@ -125,3 +122,10 @@ class Connection(Box):
 	def removeSrc(self, src):
 		global nodes
 		self.__srcids.remove(nodes.index(src))
+
+	def render(self):
+		global canvas
+		super().render()
+		if not self.isOpen():
+			x, y = gameToScreenPos(self.getX(), self.getY())
+			canvas.create_rectangle(x-2, y-2, x+2, y+2, fill="black")

@@ -182,7 +182,10 @@ class Box:
 	def getY(self):
 		return self.__y
 
-	def getText(self):
+	def getText(self): # what is rendered (nothing if closed)
+		return self.__text
+
+	def getContent(self): # whats really in there
 		return self.__text
 
 	def setX(self, x):

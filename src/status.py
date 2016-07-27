@@ -28,7 +28,7 @@ def statusOpen(obj):
 	setStatus({'type': 'open', 'object': obj})
 
 def statusEdit(obj):
-	setStatus({'type': 'edit', 'object': obj, 'text': obj.getText(), 'cursor': 0})
+	setStatus({'type': 'edit', 'object': obj, 'text': obj.getContent(), 'cursor': 0})
 
 def setEditText(txt):
 	global status

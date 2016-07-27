@@ -15,7 +15,6 @@ def editNodeBody(body):
 
 def editConnection(connection):
 	global nodes, status
-	statusOpen(connection) # needed
 	statusEdit(connection)
 
 def incCursor():
