@@ -30,6 +30,7 @@ def onRelease(event):
 							status['connection'].removeSrc(obj)
 					else:
 						die("wot?")
+					setSaved(False)
 				resetStatus()
 			else:
 				obj.click(event.x_root, event.y_root)
