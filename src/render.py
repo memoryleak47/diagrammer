@@ -4,7 +4,8 @@ def render():
 	global canvas, nodes, connections, status
 
 	canvas.delete("all")
-	canvas.create_rectangle(0, 0, 800, 600, fill=BACKGROUNDCOLOR)
+	ssize = getScreenSize()
+	canvas.create_rectangle(0, 0, ssize[0], ssize[1], fill=BACKGROUNDCOLOR)
 	for connection in reversed(connections):
 		connection.renderPaths()
 

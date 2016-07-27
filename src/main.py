@@ -38,8 +38,6 @@ def main():
 	filemenu.add_command(label="Save File As", command=menu_saveFileAs)
 	filemenu.add_command(label="Close", command=menu_close)
 
-	window.minsize(800, 600)
-	window.maxsize(800, 600)
 	window.bind("<Button-1>", onClick) # fully show node / edit mode
 	window.bind("<Button-3>", onRightClick) # create node / connection
 	window.bind("<ButtonRelease-1>", onRelease)
@@ -63,8 +61,8 @@ def main():
 	window.bind("<Control-n>", lambda e: menu_new())
 	window.bind("<Key>", onKeyPress)
 
-	canvas = tkinter.Canvas(window, width=800, height=600)
-	canvas.pack()
+	canvas = tkinter.Canvas(window)
+	canvas.pack(fill=BOTH, expand=YES)
 
 	if len(sys.argv) == 1:
 		restart()
