@@ -2,6 +2,9 @@
 
 import os
 
+def programToFile(text):
+	return text.replace("\n", "\\n").replace("\t", "\\t")
+
 def loadFile(filename):
 	global nodes, connections
 	nodes = list()
@@ -70,7 +73,7 @@ def loadFile(filename):
 def saveFile(filename, nodes, connections):
 	f = open(filename, "w")
 	for node in nodes:
-		f.write("node '" + node.getText().replace("\n", "\\n").replace("\t", "\\t") + "' '" + str(node.getX()) + "' '" + str(node.getY()) + "' '" + node.getNodeBody().getText().replace("\n", "\\n").replace("\t", "\\t") + "'\n")
+		f.write("node '" + programToFile(node.getText()) + "' '" + str(node.getX()) + "' '" + str(node.getY()) + "' '" + programToFile(node.getNodeBody().getText()) + "'\n")
 	for connection in connections:
-		f.write("connection '" + ",".join([str(x) for x in connection.getSrcIds()]) + "' '" + str(connection.getDstId()) + "' '" + str(connection.getX()) + "' '" + str(connection.getY()) + "' '" + connection.getContent() + "'\n")
+		f.write("connection '" + ",".join([str(x) for x in connection.getSrcIds()]) + "' '" + str(connection.getDstId()) + "' '" + str(connection.getX()) + "' '" + str(connection.getY()) + "' '" + programToFile(connection.getContent()) + "'\n")
 	f.close()
