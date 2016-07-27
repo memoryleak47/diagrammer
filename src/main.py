@@ -60,6 +60,7 @@ def main():
 	window.bind("<Control-o>", lambda e: menu_openFile())
 	window.bind("<Control-n>", lambda e: menu_new())
 	window.bind("<Key>", onKeyPress)
+	window.bind("<Configure>", lambda e: render())
 
 	canvas = tkinter.Canvas(window)
 	canvas.pack(fill=BOTH, expand=YES)
