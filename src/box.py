@@ -92,7 +92,11 @@ class Box:
 					x = max(x, tmpX)
 					tmpX = 0
 					y += linespace
-					linespace = 0
+					if code:
+						font = codefont
+					else:
+						font = stdfont
+					linespace = font.metrics()['linespace']
 				elif token['type'] == "normal":
 					if code:
 						font = codefont
