@@ -3,7 +3,7 @@
 import os
 
 def programToFile(text):
-	return text.replace("\n", "\\n").replace("\t", "\\t")
+	return text.replace("\n", "\\n").replace("\t", "\\t").replace("'", "\\'")
 
 def loadFile(filename):
 	global nodes, connections
