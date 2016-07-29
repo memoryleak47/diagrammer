@@ -1,7 +1,9 @@
 #!/usr/bin/python3
 
 def render():
-	global canvas, nodes, connections, status
+	global canvas, nodes, connections, status, redrawNeeded
+
+	redrawNeeded = False
 
 	canvas.delete("all")
 	ssize = getScreenSize()
