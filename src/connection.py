@@ -17,6 +17,8 @@ class Connection(Box):
 
 	def getDstNode(self):
 		global nodes
+		if self.__dstid not in range(len(nodes)):
+			die("Connection.getDstNode(): self.__dstid(" + str(self.__dstid) + ") not in nodes")
 		return nodes[self.__dstid]
 
 	def getX(self):
@@ -61,8 +63,14 @@ class Connection(Box):
 	def getDstId(self):
 		return self.__dstid
 
+	def setDstId(self, id):
+		self.__dstid = id
+
 	def getSrcIds(self):
-		return self.__srcids
+		return self.__srcids.copy()
+
+	def setSrcIds(self, srcs):
+		self.__srcids = srcs
 
 	def renderPaths(self):
 		global canvas, nodes
@@ -121,6 +129,8 @@ class Connection(Box):
 
 	def removeSrc(self, src):
 		global nodes
+		if nodes.index(src) not in self.__srcids:
+			die("Connection.removeSrc(): srcId(" + str(nodes.index(src)) + ") not in self.__srcids(" + str(self.__srcids) + ")")
 		self.__srcids.remove(nodes.index(src))
 
 	def render(self):
