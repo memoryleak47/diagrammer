@@ -80,7 +80,7 @@ def onRightDrag(event):
 	render()
 
 def handleKeyPress(arg):
-	global status, cursor
+	global status, cursor, window
 
 	if "text" not in status.keys():
 		return
@@ -89,6 +89,11 @@ def handleKeyPress(arg):
 		cursor = status['cursor']
 		setEditText(status['text'][:cursor] + "    " + status['text'][cursor:])
 		status['cursor'] += 4
+	elif arg == "Paste":
+		cursor = status['cursor']
+		txt = window.clipboard_get()
+		setEditText(status['text'][:cursor] + txt + status['text'][cursor:])
+		status['cursor'] += len(txt)
 	elif arg == "Right":
 		incCursor()
 	elif arg == "Left":

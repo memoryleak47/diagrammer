@@ -4,3 +4,5 @@ ENTERRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR -> slow:
 
 MousePosition wrong if hovered over rightclickmenu:
 	rightclick node > edit | add Connection; leftclick -> weird
+
+no cursor seen in connections-edit, if you are at a blank line.

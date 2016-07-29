@@ -54,6 +54,7 @@ def main():
 	window.bind("<BackSpace>", lambda e: handleKeyPress("RemoveLeft"))
 	window.bind("<Delete>", lambda e: handleKeyPress("RemoveRight"))
 	window.bind("<Return>", lambda e: handleKeyPress("Return"))
+	window.bind("<Control-v>", lambda e: handleKeyPress("Paste"))
 	window.bind("<Control-S>", lambda e: menu_saveFileAs())
 	window.bind("<Control-s>", lambda e: menu_saveFile())
 	window.bind("<Control-w>", lambda e: menu_close())
