@@ -10,7 +10,7 @@ def onClick(event):
 	if draggedObject != None and draggedObject.getType() == 'nodebody':
 		draggedObject = None
 
-	render()
+	requestRender()
 
 def onRelease(event):
 	global dragging, draggedObject, nodes, status
@@ -36,7 +36,7 @@ def onRelease(event):
 				obj.click(event.x_root, event.y_root)
 	draggedObject = None
 	dragging = False
-	render()
+	requestRender()
 
 def onDrag(event):
 	global dragging, mouseXLeft, mouseYLeft, draggedObject, saved, nodes
@@ -47,13 +47,13 @@ def onDrag(event):
 	mouseYLeft = event.y_root
 	dragging = True
 	updateMouse(event)
-	render()
+	requestRender()
 
 def onRightClick(event):
 	global mouseXRight, mouseYRight, dragging
 	mouseXRight = event.x_root
 	mouseYRight = event.y_root
-	render()
+	requestRender()
 
 def onRightRelease(event):
 	global dragging, window, cursorX, cursorY, rightclickmenu
@@ -68,7 +68,7 @@ def onRightRelease(event):
 			rightclickmenu = tkinter.Menu(window, tearoff=0)
 			rightclickmenu.add_command(label="Create Node", command=lambda: createNode(cursorX, cursorY))
 			rightclickmenu.post(event.x_root, event.y_root)
-	render()
+	requestRender()
 
 def onRightDrag(event):
 	global focus, mouseXRight, mouseYRight, dragging
@@ -77,7 +77,7 @@ def onRightDrag(event):
 	mouseYRight = event.y_root
 	dragging = True
 	updateMouse(event)
-	render()
+	requestRender()
 
 def handleKeyPress(arg):
 	global status, cursor, window
@@ -126,7 +126,56 @@ def handleKeyPress(arg):
 		cursor = status['cursor']
 		setEditText(status['text'][:cursor] + arg + status['text'][cursor:])
 		incCursor()
-	render()
+	requestRender()
+
+def handleKeyPress(arg):
+	global status, cursor, window
+
+	if "text" not in status.keys():
+		return
+
+	if arg == "Tab":
+		cursor = status['cursor']
+		setEditText(status['text'][:cursor] + "    " + status['text'][cursor:])
+		status['cursor'] += 4
+	elif arg == "Paste":
+		cursor = status['cursor']
+		txt = window.clipboard_get()
+		setEditText(status['text'][:cursor] + txt + status['text'][cursor:])
+		status['cursor'] += len(txt)
+	elif arg == "Right":
+		incCursor()
+	elif arg == "Left":
+		decCursor()
+	elif arg == "Ctrl+Return":
+		obj = status['object']
+		if obj != None:
+			obj.setText(status['text'])
+			if obj.getType() == 'node':
+				resetStatus()
+			else:
+				statusOpen(obj)
+			setSaved(False)
+	elif arg == "Escape":
+		resetStatus()
+	elif arg == "RemoveLeft":
+		cursor = status['cursor']
+		if cursor != 0:
+			setEditText(status['text'][:cursor-1] + status['text'][cursor:])
+			decCursor()
+	elif arg == "RemoveRight":
+		cursor = status['cursor']
+		if cursor < len(status['text']):
+			setEditText(status['text'][:cursor] + status['text'][cursor+1:])
+	elif arg == "Return":
+		cursor = status['cursor']
+		setEditText(status['text'][:cursor] + '\n' + status['text'][cursor:])
+		incCursor()
+	elif arg != '' and arg in (string.printable + "ßöäüÄÖÜ\\"):
+		cursor = status['cursor']
+		setEditText(status['text'][:cursor] + arg + status['text'][cursor:])
+		incCursor()
+	requestRender()
 
 def onKeyPress(event):
 	if event.keysym == 'backslash':

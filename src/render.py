@@ -17,3 +17,7 @@ def render():
 
 	if nodeBodyVisible():
 		status['object'].render()
+
+def requestRender():
+	global redrawNeeded
+	redrawNeeded = True

@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 def restart(filename=None):
-	global openfilename, dragging, nodes, connections, focus, saved
+	global openfilename, dragging, nodes, connections, focus, saved, redrawNeeded
 	status = {'type': 'none'}
 	openfilename = filename
 	dragging = False
@@ -12,7 +12,7 @@ def restart(filename=None):
 		nodes = list()
 		connections = list()
 	setSaved(True)
-	render()
+	redrawNeeded = True
 
 def main():
 	global canvas, cursorX, cursorY, window, rightclickmenu, stdfont, codefont, editfont, status
@@ -61,7 +61,7 @@ def main():
 	window.bind("<Control-o>", lambda e: menu_openFile())
 	window.bind("<Control-n>", lambda e: menu_new())
 	window.bind("<Key>", onKeyPress)
-	window.bind("<Configure>", lambda e: render())
+	window.bind("<Configure>", lambda e: requestRender())
 
 	canvas = tkinter.Canvas(window)
 	canvas.pack(fill=BOTH, expand=YES)
@@ -73,5 +73,11 @@ def main():
 	else:
 		die(usage)
 
+	window.after(0, loop)
 	window.mainloop()
 
+def loop():
+	global window, redrawNeeded
+	if redrawNeeded:
+		render()
+	window.after(1, loop)
