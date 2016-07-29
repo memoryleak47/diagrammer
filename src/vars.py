@@ -17,7 +17,7 @@ BODYCOLOR = "#AA5555"
 EDITCOLOR = "white"
 CONNECTIONCOLOR = "#4444FF"
 
-STDFONT = ("times", 10)
+STDFONT = ("arial", 10)
 CODEFONT = ("Monospace", 10)
 EDITFONT = ("Monospace", 7)
 
