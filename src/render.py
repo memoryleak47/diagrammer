@@ -17,7 +17,7 @@ def render():
 	for node in reversed(nodes):
 		node.render()
 
-	if nodeBodyVisible():
+	if 'object' in status:
 		status['object'].render()
 
 def requestRender():
