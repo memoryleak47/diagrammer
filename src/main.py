@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 def restart(filename=None):
-	global openfilename, dragging, nodes, connections, focus, saved, redrawNeeded
+	global openfilename, dragging, nodes, connections, focus, saved, redrawNeeded, redrawing
 	status = {'type': 'none'}
 	openfilename = filename
 	dragging = False
@@ -13,6 +13,7 @@ def restart(filename=None):
 		connections = list()
 	setSaved(True)
 	redrawNeeded = True
+	redrawing = False
 
 def main():
 	global canvas, cursorX, cursorY, window, rightclickmenu, stdfont, codefont, editfont, status
@@ -77,7 +78,6 @@ def main():
 	window.mainloop()
 
 def loop():
-	global window, redrawNeeded
-	if redrawNeeded:
-		render()
+	global window, redrawNeeded, redrawing
+	optRender()
 	window.after(1, loop)

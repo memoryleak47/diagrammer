@@ -1,9 +1,10 @@
 #!/usr/bin/python3
 
 def render():
-	global canvas, nodes, connections, status, redrawNeeded
+	global canvas, nodes, connections, status, redrawNeeded, redrawing
 
 	redrawNeeded = False
+	redrawing = True
 
 	canvas.delete("all")
 	ssize = getScreenSize()
@@ -20,6 +21,14 @@ def render():
 	if 'object' in status:
 		status['object'].render()
 
+	redrawing = False
+
 def requestRender():
 	global redrawNeeded
 	redrawNeeded = True
+
+def optRender():
+	global redrawNeeded, redrawing
+
+	if redrawNeeded and not redrawing:
+		render()
