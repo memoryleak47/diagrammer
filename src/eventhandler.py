@@ -82,100 +82,98 @@ def onRightDrag(event):
 def handleKeyPress(arg):
 	global status, cursor, window
 
-	if "text" not in status.keys():
-		return
-
-	if arg == "Tab":
-		cursor = status['cursor']
-		setEditText(status['text'][:cursor] + "    " + status['text'][cursor:])
-		status['cursor'] += 4
-	elif arg == "Paste":
-		cursor = status['cursor']
-		txt = window.clipboard_get()
-		setEditText(status['text'][:cursor] + txt + status['text'][cursor:])
-		status['cursor'] += len(txt)
-	elif arg == "Right":
-		incCursor()
-	elif arg == "Left":
-		decCursor()
-	elif arg == "Ctrl+Return":
-		obj = status['object']
-		if obj != None:
-			obj.setText(status['text'])
-			if obj.getType() == 'node':
-				resetStatus()
-			else:
-				statusOpen(obj)
-			setSaved(False)
-	elif arg == "Escape":
+	if arg == "Escape":
 		resetStatus()
-	elif arg == "RemoveLeft":
-		cursor = status['cursor']
-		if cursor != 0:
-			setEditText(status['text'][:cursor-1] + status['text'][cursor:])
+	elif "text" in status.keys():
+		if arg == "Tab":
+			cursor = status['cursor']
+			setEditText(status['text'][:cursor] + "    " + status['text'][cursor:])
+			status['cursor'] += 4
+		elif arg == "Paste":
+			cursor = status['cursor']
+			txt = window.clipboard_get()
+			setEditText(status['text'][:cursor] + txt + status['text'][cursor:])
+			status['cursor'] += len(txt)
+		elif arg == "Right":
+			incCursor()
+		elif arg == "Left":
 			decCursor()
-	elif arg == "RemoveRight":
-		cursor = status['cursor']
-		if cursor < len(status['text']):
-			setEditText(status['text'][:cursor] + status['text'][cursor+1:])
-	elif arg == "Return":
-		cursor = status['cursor']
-		setEditText(status['text'][:cursor] + '\n' + status['text'][cursor:])
-		incCursor()
-	elif arg != '' and arg in (string.printable + "ßöäüÄÖÜ\\"):
-		cursor = status['cursor']
-		setEditText(status['text'][:cursor] + arg + status['text'][cursor:])
-		incCursor()
-	requestRender()
+		elif arg == "Ctrl+Return":
+			obj = status['object']
+			if obj != None:
+				obj.setText(status['text'])
+				if obj.getType() == 'node':
+					resetStatus()
+				else:
+					statusOpen(obj)
+				setSaved(False)
+		elif arg == "RemoveLeft":
+			cursor = status['cursor']
+			if cursor != 0:
+				setEditText(status['text'][:cursor-1] + status['text'][cursor:])
+				decCursor()
+		elif arg == "RemoveRight":
+			cursor = status['cursor']
+			if cursor < len(status['text']):
+				setEditText(status['text'][:cursor] + status['text'][cursor+1:])
+		elif arg == "Return":
+			cursor = status['cursor']
+			setEditText(status['text'][:cursor] + '\n' + status['text'][cursor:])
+			incCursor()
+		elif arg != '' and arg in (string.printable + "ßöäüÄÖÜ\\"):
+			cursor = status['cursor']
+			setEditText(status['text'][:cursor] + arg + status['text'][cursor:])
+			incCursor()
+		requestRender()
 
-def handleKeyPress(arg):
-	global status, cursor, window
+	def handleKeyPress(arg):
+		global status, cursor, window
 
-	if "text" not in status.keys():
-		return
+		if "text" not in status.keys():
+			return
 
-	if arg == "Tab":
-		cursor = status['cursor']
-		setEditText(status['text'][:cursor] + "    " + status['text'][cursor:])
-		status['cursor'] += 4
-	elif arg == "Paste":
-		cursor = status['cursor']
-		txt = window.clipboard_get()
-		setEditText(status['text'][:cursor] + txt + status['text'][cursor:])
-		status['cursor'] += len(txt)
-	elif arg == "Right":
-		incCursor()
-	elif arg == "Left":
-		decCursor()
-	elif arg == "Ctrl+Return":
-		obj = status['object']
-		if obj != None:
-			obj.setText(status['text'])
-			if obj.getType() == 'node':
-				resetStatus()
-			else:
-				statusOpen(obj)
-			setSaved(False)
-	elif arg == "Escape":
-		resetStatus()
-	elif arg == "RemoveLeft":
-		cursor = status['cursor']
-		if cursor != 0:
-			setEditText(status['text'][:cursor-1] + status['text'][cursor:])
+		if arg == "Tab":
+			cursor = status['cursor']
+			setEditText(status['text'][:cursor] + "    " + status['text'][cursor:])
+			status['cursor'] += 4
+		elif arg == "Paste":
+			cursor = status['cursor']
+			txt = window.clipboard_get()
+			setEditText(status['text'][:cursor] + txt + status['text'][cursor:])
+			status['cursor'] += len(txt)
+		elif arg == "Right":
+			incCursor()
+		elif arg == "Left":
 			decCursor()
-	elif arg == "RemoveRight":
-		cursor = status['cursor']
-		if cursor < len(status['text']):
-			setEditText(status['text'][:cursor] + status['text'][cursor+1:])
-	elif arg == "Return":
-		cursor = status['cursor']
-		setEditText(status['text'][:cursor] + '\n' + status['text'][cursor:])
-		incCursor()
-	elif arg != '' and arg in (string.printable + "ßöäüÄÖÜ\\"):
-		cursor = status['cursor']
-		setEditText(status['text'][:cursor] + arg + status['text'][cursor:])
-		incCursor()
-	requestRender()
+		elif arg == "Ctrl+Return":
+			obj = status['object']
+			if obj != None:
+				obj.setText(status['text'])
+				if obj.getType() == 'node':
+					resetStatus()
+				else:
+					statusOpen(obj)
+				setSaved(False)
+		elif arg == "Escape":
+			resetStatus()
+		elif arg == "RemoveLeft":
+			cursor = status['cursor']
+			if cursor != 0:
+				setEditText(status['text'][:cursor-1] + status['text'][cursor:])
+				decCursor()
+		elif arg == "RemoveRight":
+			cursor = status['cursor']
+			if cursor < len(status['text']):
+				setEditText(status['text'][:cursor] + status['text'][cursor+1:])
+		elif arg == "Return":
+			cursor = status['cursor']
+			setEditText(status['text'][:cursor] + '\n' + status['text'][cursor:])
+			incCursor()
+		elif arg != '' and arg in (string.printable + "ßöäüÄÖÜ\\"):
+			cursor = status['cursor']
+			setEditText(status['text'][:cursor] + arg + status['text'][cursor:])
+			incCursor()
+		requestRender()
 
 def onKeyPress(event):
 	if event.keysym == 'backslash':
